@@ -19,28 +19,31 @@ export default {
 
     methods: {
         async login_user() {
-            const res = await fetch(location.origin + '/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: this.email,
-                    password: this.password
-                })
-            });
+            try {
+                const res = await fetch(location.origin + '/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: this.email,
+                        password: this.password
+                    })
+                });
 
-            if (res.ok) {
-                console.log('Logged in');
-                const data = await res.json()
-                
-                localStorage.setItem('user', JSON.stringify(data));
-                
-                this.$store.commit('setUser');
-                this.$router.push('/feed');
-            } else {
-                const data = await res.json();
-                console.error('Login failed:', data.message);
+                if (res.ok) {
+                    console.log('Logged in');
+                    const data = await res.json();
+                    localStorage.setItem('user', JSON.stringify(data));
+                    this.$store.commit('setUser');
+                    this.$router.push('/feed');
+                } else {
+                    const data = await res.json();
+                    alert('Login failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again later.');
             }
         }
     }

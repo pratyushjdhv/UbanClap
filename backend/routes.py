@@ -1,6 +1,7 @@
-from flask import current_app as app, jsonify, request, render_template
+from flask import jsonify, request, render_template, current_app as app
 from flask_security import auth_required, hash_password, verify_password
 from backend.models import db
+
 
 datastore = app.security.datastore
 
@@ -18,13 +19,18 @@ def login():
         return jsonify({'message': 'Email and password are required'}), 400
     
     user = datastore.find_user(email=email)
-    print(user)
     
     if not user:
         return jsonify({'message': 'User not found'}), 404
     
     if verify_password(password, user.password):
-        return jsonify({'user_name': user.name,'token': user.get_auth_token(), 'email': user.email, 'role': user.roles[0].name, 'id': user.id, }), 200
+        return jsonify({
+            'token': user.get_auth_token(),
+            'email': user.email,
+            'role': user.roles[0].name,
+            'id': user.id,
+            'name': user.name
+        }), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -40,7 +46,7 @@ def register():
     pincode = data.get('pincode')
     role = data.get('role')
 
-    if not email or not password or role not in ['admin', 'customer', 'emp']:
+    if not email or not password or not name or not phone or not address or not pincode or role not in ['admin', 'customer', 'emp']:
         return jsonify({'message': 'All fields are required'}), 400
     
     if datastore.find_user(email=email):
@@ -58,6 +64,6 @@ def register():
         )
         db.session.commit()
         return jsonify({'message': 'User created successfully'}), 201
-    except:
+    except Exception as e:
         db.session.rollback()
-        return jsonify({'message': 'Something went wrong'}), 500
+        return jsonify({'message': 'Something went wrong: ' + str(e)}), 500
