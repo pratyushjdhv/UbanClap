@@ -1,1 +1,3 @@
 fuser -k 5000/tcp
+celery -A app:celery_app worker -l INFO
+redis-server

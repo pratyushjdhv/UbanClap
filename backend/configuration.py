@@ -10,4 +10,7 @@ class development(configuration):
     SECRET_KEY = "things_to_be_kept_secret"
     SECURITY_TOKEN_AUTHENTICATION_HEADER = 'Authentication-Token'
     #SECURITY_LOGIN_URL = '/login'
+    CACHE_TYPE =  "RedisCache"
+    CACHE_DEFAULT_TIMEOUT = 30
+    CACHE_REDIS_PORT = 6379
     WTF_CSRF_ENABLED = False

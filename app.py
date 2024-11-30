@@ -1,8 +1,12 @@
 from flask import Flask
-from flask_security import Security, SQLAlchemyUserDatastore
+from flask_security import Security, SQLAlchemyUserDatastore, auth_required
 from backend.configuration import development
 from backend.models import db, Customer, Role
-from backend.resources import api
+from flask_login import login_required
+from flask_caching import Cache
+from backend.celery.celery_init import celery_init_app
+import flask_excel as excel
+
 
 def create_app():
     app = Flask(
@@ -19,12 +23,19 @@ def create_app():
     })
     db.init_app(app)
 
+    cache = Cache(app)
+
     # with app.app_context():
     #     db.create_all()
 
     datastore = SQLAlchemyUserDatastore(db, Customer, Role)
+
+    app.cache = cache
+
     app.security = Security(app, datastore=datastore, register_blueprint=False)
     app.app_context().push()
+    
+    from backend.resources import api
 
     api.init_app(app)
 
@@ -32,8 +43,14 @@ def create_app():
 
 app = create_app()
 
+celery_app = celery_init_app(app)
+
+
 import backend.innit_data
 import backend.routes
+
+excel.init_excel(app)
+
 
 if __name__ == '__main__':
     app.run()

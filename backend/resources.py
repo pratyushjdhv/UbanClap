@@ -1,10 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify, request, current_app as app
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
 from backend.models import db, Customer, Services, Booking
 from datetime import datetime
+from flask_caching import Cache
 
 api = Api(prefix='/api')
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 service_fields = {
     'id': fields.Integer,
@@ -24,6 +26,7 @@ booking_fields = {
 
 class services_api(Resource):
     @auth_required('token')
+    @cache.cached(timeout=10, key_prefix='service_{id}')
     @marshal_with(service_fields)
     def get(self, id):
         service_instance = Services.query.get(id)
@@ -45,6 +48,7 @@ class services_api(Resource):
             res.price = data.get('price')
             try:
                 db.session.commit()
+                cache.delete(f'service_{id}')  # Delete the cache for the specific service
                 return {'message': 'Service updated'}, 200
             except:
                 db.session.rollback()
@@ -62,6 +66,7 @@ class services_api(Resource):
             try:
                 db.session.delete(res)
                 db.session.commit()
+                cache.delete(f'service_{id}')  # Delete the cache for the specific service
                 return {'message': 'Service deleted'}, 200
             except:
                 db.session.rollback()
