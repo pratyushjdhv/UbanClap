@@ -1,7 +1,8 @@
 from flask import jsonify, request
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import db, Customer, Services
+from backend.models import db, Customer, Services, Booking
+from datetime import datetime
 
 api = Api(prefix='/api')
 
@@ -11,6 +12,14 @@ service_fields = {
     'name': fields.String,
     'description': fields.String,
     'price': fields.String
+}
+
+booking_fields = {
+    'id': fields.Integer,
+    'customer_id': fields.Integer,
+    'service_id': fields.Integer,
+    'date': fields.DateTime,
+    'status': fields.String
 }
 
 class services_api(Resource):
@@ -97,5 +106,33 @@ class service_list_api(Resource):
             print("Error:", e)
             return {'message': 'Something went wrong'}, 500
 
+class booking_api(Resource):
+    @auth_required('token')
+    @marshal_with(booking_fields)
+    def get(self, id):
+        booking_instance = Booking.query.get(id)
+        if not booking_instance:
+            return {'message': 'No such booking found'}, 404
+        return booking_instance
+    
+    @auth_required('token')
+    def post(self):
+        data = request.get_json()
+        new_booking = Booking(
+            customer_id=current_user.id,
+            service_id=data.get('service_id'),
+            date=datetime.strptime(data.get('date'), '%Y-%m-%d %H:%M:%S'),
+            status='Pending'
+        )
+        try:
+            db.session.add(new_booking)
+            db.session.commit()
+            return {'message': 'Booking created'}, 200
+        except Exception as e:
+            db.session.rollback()
+            print("Error:", e)
+            return {'message': 'Something went wrong'}, 500
+
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')
+api.add_resource(booking_api, '/booking')
