@@ -11,7 +11,12 @@ def create_app():
         static_folder='frontend'
     )
     app.config.from_object(development)
-
+    app.config.update({
+        'SECURITY_REGISTERABLE': False,
+        'SECURITY_RECOVERABLE': False,
+        'SECURITY_CHANGEABLE': False,
+        'SECURITY_LOGIN_URL': '/login',
+    })
     db.init_app(app)
 
     # with app.app_context():

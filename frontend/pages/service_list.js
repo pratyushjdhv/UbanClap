@@ -13,7 +13,7 @@ export default {
                 :price="service.price" 
                 :service_id="service.id" 
                 @service-deleted="removeservice"
-            >
+            />
         </div>    
     `,
 
