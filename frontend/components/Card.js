@@ -2,10 +2,10 @@ export default {
     props:['service','name','description','price', 'service_id'],
     template: `
         <div class='jumbotron'>
-            <h1>{{service}}</h1>
+            <h1 @click="$router.push('/service/'+ service_id)" >{{service_id}}. {{service}}</h1>
             <p>{{name}}</p>
             <p>{{price}}</p>
-            <button>Book</button>
+            
             
         </div>
     `,

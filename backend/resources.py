@@ -80,18 +80,21 @@ class service_list_api(Resource):
     @auth_required('token')
     def post(self):
         data = request.get_json()
-        service = Services(
+        print("Received data:", data)
+        new_service = Services(
             service=data.get('service'),
             name=data.get('name'),
             description=data.get('description'),
             price=data.get('price'),
         )
+        print("New service:", new_service)
         try:
-            db.session.add(service)
+            db.session.add(new_service)
             db.session.commit()
             return {'message': 'Service added'}, 200
-        except:
+        except Exception as e:
             db.session.rollback()
+            print("Error:", e)
             return {'message': 'Something went wrong'}, 500
 
 api.add_resource(services_api, '/service/<int:id>')
