@@ -2,6 +2,7 @@ from celery import shared_task
 import time
 import flask_excel
 from backend.models import Services
+from backend.celery.mail import mail_them
 
 
 @shared_task(bind = True, ignore_result = False)
@@ -17,4 +18,8 @@ def create_csv(self):
         file.write(csv_out.data)
     
     return filename
+
+@shared_task(ignore_results = True)
+def email_reminder(to, sub, content):
+    mail_them(to,sub,content)
 
