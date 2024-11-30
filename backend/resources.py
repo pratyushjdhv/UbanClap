@@ -3,7 +3,7 @@ from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
 from backend.models import db, Customer, Services
 
-api =Api(prefix='/api')
+api = Api(prefix='/api')
 
 service_fields = {
     'id': fields.Integer,
@@ -16,13 +16,15 @@ service_fields = {
 class services_api(Resource):
     @auth_required('token')
     @marshal_with(service_fields)
-    def get(self):
-        service = Services.query.all()
-        return service
+    def get(self, id):
+        service_instance = Services.query.get(id)
+        if not service_instance:
+            return {'message': 'No such service found'}, 404
+        return service_instance
     
     @auth_required('token')
     @marshal_with(service_fields)
-    def put(self,id):
+    def put(self, id):
         res = Services.query.get(id)
         if not res:
             return {'message': 'No such service found'}, 404
@@ -62,17 +64,19 @@ class service_list_api(Resource):
     @auth_required('token')
     @marshal_with(service_fields)
     def get(self):
-        service = Services.query.all()
-        return service
+        services = Services.query.all()
+        if not services:
+            return [], 200  # Return an empty list if no services are found
+        return services
     
     @auth_required('token')
     def post(self):
         data = request.get_json()
         service = Services(
-            service = data.get('service'),
-            name = data.get('name'),
-            description = data.get('description'),
-            price = data.get('price'),
+            service=data.get('service'),
+            name=data.get('name'),
+            description=data.get('description'),
+            price=data.get('price'),
         )
         try:
             db.session.add(service)
@@ -81,7 +85,6 @@ class service_list_api(Resource):
         except:
             db.session.rollback()
             return {'message': 'Something went wrong'}, 500
-        
 
-api.add_resource(services_api, '/services/<int:id>')
+api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')

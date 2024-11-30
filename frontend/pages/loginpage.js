@@ -30,7 +30,16 @@ export default {
 
             if (res.ok) {
                 console.log('Logged in');
-                // this.$router.push('/feed');
+                const data = await res.json()
+                console.log(data)
+
+                localStorage.setItem('user', JSON.stringify(data));
+                
+                this.$store.commit('setUser');
+                this.$router.push('/feed');
+            } else {
+                const data = await res.json();
+                console.error('Login failed:', data.message);
             }
         }
     }
