@@ -16,7 +16,7 @@ const store = new Vuex.Store({
                     state.loggedIn = true;
                     state.role = user.role;
                     state.user_id = user.user_id;
-                    state.username = user.user_name;
+                    state.username = user.name;
 
                 }
             }catch{

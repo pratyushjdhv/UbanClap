@@ -49,7 +49,9 @@ export default {
 
                 if (res.ok) {
                     console.log('Registered');
+                    alert('Registration successful');
                     this.$router.push('/login');
+
                 } else {
                     const data = await res.json();
                     console.log(data);
