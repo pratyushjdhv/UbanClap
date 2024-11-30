@@ -1,7 +1,7 @@
 export default {
     props:['service','name','description','price', 'service_id'],
     template: `
-        <div class='jumbotron>
+        <div class='jumbotron'>
             <h1>{{service}}</h1>
             <p>{{name}}</p>
             <p>{{price}}</p>

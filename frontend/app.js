@@ -6,6 +6,7 @@ const app = new Vue({
     el: '#app',
     template: `
         <div> 
+            <h3>welcome {{$store.state.username}}</h3>
             <h2> <Navbar /> </h2>
             
             <router-view> </router-view>

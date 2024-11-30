@@ -65,10 +65,17 @@ class service_list_api(Resource):
     @marshal_with(service_fields)
     def get(self):
         serv = Services.query.all()
-        print(serv)
-        if not serv:
-            return [], 200  # Return an empty list if no services are found
-        return serv
+        service_instance = [
+            {
+                'id': s.id,
+                'service': s.service,
+                'name': s.name,
+                'description': s.description,
+                'price': s.price
+            }
+            for s in serv
+        ]
+        return service_instance
     
     @auth_required('token')
     def post(self):

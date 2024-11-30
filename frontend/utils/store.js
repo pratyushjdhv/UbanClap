@@ -3,7 +3,9 @@ const store = new Vuex.Store({
         auth_token : null,
         loggedIn : false,
         role : null,
-        user_id : null,        
+        user_id : null,
+        username : null,
+
     },
     mutations: {
         setUser(state){
@@ -14,6 +16,8 @@ const store = new Vuex.Store({
                     state.loggedIn = true;
                     state.role = user.role;
                     state.user_id = user.user_id;
+                    state.username = user.user_name;
+
                 }
             }catch{
                 console.log('No user logged in');
@@ -24,6 +28,7 @@ const store = new Vuex.Store({
             state.loggedIn = false;
             state.role = null;
             state.user_id = null;
+            state.username = null;
 
             localStorage.removeItem('user');
         }
@@ -31,4 +36,5 @@ const store = new Vuex.Store({
 });
 
 store.commit("setUser");
+
 export default store;

@@ -33,8 +33,7 @@ export default {
             if (res.ok) {
                 console.log('Logged in');
                 const data = await res.json()
-                console.log(data)
-
+                
                 localStorage.setItem('user', JSON.stringify(data));
                 
                 this.$store.commit('setUser');

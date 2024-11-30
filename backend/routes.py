@@ -18,12 +18,13 @@ def login():
         return jsonify({'message': 'Email and password are required'}), 400
     
     user = datastore.find_user(email=email)
+    print(user)
     
     if not user:
         return jsonify({'message': 'User not found'}), 404
     
     if verify_password(password, user.password):
-        return jsonify({'token': user.get_auth_token(), 'email': user.email, 'role': user.roles[0].name, 'id': user.id}), 200
+        return jsonify({'user_name': user.name,'token': user.get_auth_token(), 'email': user.email, 'role': user.roles[0].name, 'id': user.id, }), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
