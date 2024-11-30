@@ -5,7 +5,7 @@ export default {
             <input v-model="service" placeholder="Service" class="form-control mb-3"> 
             <input v-model="name" placeholder="Name" class="form-control mb-3"> 
             <input v-model="description" placeholder="Description" class="form-control mb-3">
-            <input v-model="price" placeholder="Price" class="form-control mb-3">
+            <input type="number" v-model="price" placeholder="Price" class="form-control mb-3">
             <button @click="create_service" class="btn btn-primary">Create Service</button>          
         </div>    
     `,
@@ -21,6 +21,12 @@ export default {
 
     methods: {
         async create_service() {
+            // Validate that all fields are present
+            if (!this.service || !this.name || !this.description || !this.price) {
+                alert('All fields are required');
+                return;
+            }
+
             try {
                 const res = await fetch(location.origin + '/api/services', {
                     method: 'POST',
