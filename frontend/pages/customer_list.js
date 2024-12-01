@@ -1,7 +1,15 @@
 export default {
     template: `
         <div>
-            <h1>Customer List</h1>
+            <h1>Users List</h1>
+            <div class="mb-3">
+                <label for="roleFilter">Filter by role:</label>
+                <select id="roleFilter" v-model="selectedRole" @change="fetchCustomers" class="form-control">
+                    <option value="">All</option>
+                    <option value="customer">Customer</option>
+                    <option value="emp">Employee</option>
+                </select>
+            </div>
             <div v-if="isLoading">Loading...</div>
             <div v-else-if="error">{{ error }}</div>
             <div v-else>
@@ -13,16 +21,18 @@ export default {
                             <th>Phone</th>
                             <th>Address</th>
                             <th>Pincode</th>
+                            <th>Role</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="customer in customers" :key="customer.id">
+                        <tr v-for="customer in filteredCustomers" :key="customer.id">
                             <td>{{ customer.name }}</td>
                             <td>{{ customer.email }}</td>
                             <td>{{ customer.phone }}</td>
                             <td>{{ customer.address }}</td>
                             <td>{{ customer.pincode }}</td>
+                            <td>{{ customer.roles[0].name }}</td>
                             <td>
                                 <button v-if="customer.active" @click="updateCustomerStatus(customer.id, false)" class="btn btn-danger">Ban</button>
                                 <button v-else @click="updateCustomerStatus(customer.id, true)" class="btn btn-success">Unban</button>
@@ -36,9 +46,18 @@ export default {
     data() {
         return {
             customers: [],
+            selectedRole: '',
             isLoading: false,
             error: null,
         };
+    },
+    computed: {
+        filteredCustomers() {
+            if (this.selectedRole) {
+                return this.customers.filter(customer => customer.roles[0].name === this.selectedRole);
+            }
+            return this.customers;
+        }
     },
     methods: {
         async fetchCustomers() {

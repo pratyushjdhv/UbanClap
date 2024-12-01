@@ -1,9 +1,8 @@
-from flask import jsonify, request, render_template, current_app as app , send_file
+from flask import jsonify, request, render_template, current_app as app, send_file
 from flask_security import auth_required, hash_password, verify_password
-from backend.models import db
+from backend.models import db, Customer, Role
 from backend.celery.task import create_csv
 from celery.result import AsyncResult
-
 
 datastore = app.security.datastore
 cache = app.cache
@@ -25,30 +24,12 @@ def getCSV(id):
         return send_file(f'./backend/celery/user_download/{filename}') #, as_attachment=True
     else:
         return {"status": "Processing"}, 202
-    
-    
+
 @auth_required('token') 
 @app.get('/createcsv')
 def createCSV():
     task = create_csv.delay()
     return {'task_id' : task.id}, 200
-
-# @app.get('/export/<id>')
-# def export(id):
-#     res = AsyncResult(id)
-#     print(res)
-#     print(res.ready())
-#     if res.ready():
-#         filename = res.result
-#         print(filename)
-#         return send_file(f'./backend/celery/downloadsservices{filename}'), 200
-#     return jsonify({'message': 'Task not ready'}), 202
-
-# @app.get('/create-csv')
-# def create_csv():
-#     task = export_services.delay()
-#     return {'task_id': task.id}, 202
-
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -63,6 +44,9 @@ def login():
     
     if not user:
         return jsonify({'message': 'User not found'}), 404
+    
+    if not user.active:
+        return jsonify({'message': 'Your account has been banned'}), 403
     
     if verify_password(password, user.password):
         return jsonify({

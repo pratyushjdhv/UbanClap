@@ -24,9 +24,11 @@ customer_fields = {
     'phone': fields.String,
     'address': fields.String,
     'pincode': fields.String,
-    'active': fields.Boolean
+    'active': fields.Boolean,
+    'roles': fields.List(fields.Nested({
+        'name': fields.String
+    }))
 }
-
 booking_fields = {
     'id': fields.Integer,
     'customer': fields.Nested(customer_fields),
