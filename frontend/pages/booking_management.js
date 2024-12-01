@@ -27,7 +27,6 @@ export default {
                             <td>{{ booking.status }}</td>
                             <td>
                                 <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Confirmed')" class="btn btn-success">Confirm</button>
-                                <button v-if="booking.status === 'Confirmed'" @click="updateBookingStatus(booking.id, 'Completed')" class="btn btn-primary">Complete</button>
                             </td>
                         </tr>
                     </tbody>
@@ -35,7 +34,6 @@ export default {
             </div>
         </div>
     `,
-
     data() {
         return {
             bookings: [],
@@ -43,7 +41,6 @@ export default {
             error: null,
         };
     },
-
     methods: {
         async fetchBookings() {
             this.isLoading = true;
@@ -68,7 +65,6 @@ export default {
                 this.isLoading = false;
             }
         },
-
         async updateBookingStatus(id, status) {
             try {
                 const res = await fetch(`${location.origin}/api/bookings/${id}`, {
@@ -92,7 +88,6 @@ export default {
             }
         }
     },
-
     async mounted() {
         await this.fetchBookings();
     }

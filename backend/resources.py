@@ -142,22 +142,22 @@ class booking_api(Resource):
             return {'message': 'No such booking found'}, 404
 
         if current_user.has_role('emp'):
+            if data.get('status') == 'Completed':
+                return {'message': 'Employees cannot mark bookings as completed'}, 403
             booking_instance.status = data.get('status')
-            try:
-                db.session.commit()
-                
-                # Send email notification to the customer
-                customer_email = booking_instance.customer.email
-                subject = f"Booking {booking_instance.status}"
-                content = f"Your booking for the service '{booking_instance.service.name}' has been {booking_instance.status.lower()}."
-                mail_them(customer_email, subject, content)
-                
-                return {'message': 'Booking status updated and customer notified'}, 200
-            except Exception as e:
-                db.session.rollback()
-                return {'message': 'Something went wrong: ' + str(e)}, 500
+        elif current_user.has_role('customer'):
+            if booking_instance.customer_id != current_user.id:
+                return {'message': 'Not authorized to update this booking'}, 403
+            booking_instance.status = data.get('status')
         else:
             return {'message': 'Not authorized to update booking status'}, 403
+
+        try:
+            db.session.commit()
+            return {'message': 'Booking status updated'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Something went wrong: ' + str(e)}, 500
 
 class booking_list_api(Resource):
     @auth_required('token')
@@ -165,6 +165,8 @@ class booking_list_api(Resource):
     def get(self):
         if current_user.has_role('emp'):
             bookings = Booking.query.filter_by(emp_id=current_user.id).all()
+        elif current_user.has_role('customer'):
+            bookings = Booking.query.filter_by(customer_id=current_user.id).all()
         else:
             return {'message': 'Not authorized to view bookings'}, 403
         
