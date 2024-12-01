@@ -104,7 +104,7 @@ class service_list_api(Resource):
     @auth_required('token')
     def post(self):
         data = request.get_json()
-        if not data.get('service') or not data.get('name') or not data.get('description') or not data.get('price'):
+        if (not data.get('service') or not data.get('name') or not data.get('description') or not data.get('price')):
             return {'message': 'All fields are required'}, 400
 
         new_service = Services(

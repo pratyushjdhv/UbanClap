@@ -1,9 +1,9 @@
 export default {
     template: `
         <div>
-            <h1> this is admin dashboard </h1>
-            <button @click="create_csv"> Get Blog Data </button>
-
+            <h1>Admin Dashboard</h1>
+            <button @click="create_csv" class="btn btn-primary mb-3">Get Blog Data</button>
+            <button @click="$router.push('/customer-list')" class="btn btn-secondary mb-3">View Customer List</button>
         </div>
     `,
     methods: {
@@ -21,7 +21,6 @@ export default {
                     clearInterval(interval);
                 }
             },100)
-
-        },
+        }
     }
 }
