@@ -23,7 +23,8 @@ customer_fields = {
     'email': fields.String,
     'phone': fields.String,
     'address': fields.String,
-    'pincode': fields.String
+    'pincode': fields.String,
+    'active': fields.Boolean
 }
 
 booking_fields = {
@@ -213,7 +214,7 @@ class customer_list_api(Resource):
             return customers
         else:
             return {'message': 'Not authorized to view customers'}, 403
-        
+
 class customer_api(Resource):
     @auth_required('token')
     def put(self, id):
@@ -233,8 +234,6 @@ class customer_api(Resource):
         except Exception as e:
             db.session.rollback()
             return {'message': 'Something went wrong: ' + str(e)}, 500
-
-
 
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')

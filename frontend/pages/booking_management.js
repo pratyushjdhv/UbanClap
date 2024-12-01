@@ -1,29 +1,31 @@
 export default {
     template: `
         <div>
-            <h1>Manage Bookings</h1>
+            <h1>Customer List</h1>
             <div v-if="isLoading">Loading...</div>
             <div v-else-if="error">{{ error }}</div>
             <div v-else>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Service</th>
-                            <th>Customer</th>
-                            <th>Date</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Pincode</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="booking in bookings" :key="booking.id">
-                            <td>{{ booking.service.name }}</td>
-                            <td>{{ booking.customer.name }}</td>
-                            <td>{{ booking.date }}</td>
-                            <td>{{ booking.status }}</td>
+                        <tr v-for="customer in customers" :key="customer.id">
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>{{ customer.pincode }}</td>
                             <td>
-                                <button @click="updateBookingStatus(booking.id, 'Accepted')" class="btn btn-success">Accept</button>
-                                <button @click="updateBookingStatus(booking.id, 'Rejected')" class="btn btn-danger">Reject</button>
+                                <button v-if="customer.active" @click="updateCustomerStatus(customer.id, false)" class="btn btn-danger">Ban</button>
+                                <button v-else @click="updateCustomerStatus(customer.id, true)" class="btn btn-success">Unban</button>
                             </td>
                         </tr>
                     </tbody>
@@ -34,62 +36,62 @@ export default {
 
     data() {
         return {
-            bookings: [],
+            customers: [],
             isLoading: false,
             error: null,
         };
     },
 
     methods: {
-        async fetchBookings() {
+        async fetchCustomers() {
             this.isLoading = true;
             this.error = null;
 
             try {
-                const res = await fetch(`${location.origin}/api/bookings`, {
+                const res = await fetch(`${location.origin}/api/customers`, {
                     headers: {
                         'Authentication-Token': this.$store.state.auth_token
                     }
                 });
 
                 if (!res.ok) {
-                    throw new Error(`Failed to fetch bookings: HTTP ${res.status}`);
+                    throw new Error(`Failed to fetch customers: HTTP ${res.status}`);
                 }
 
-                this.bookings = await res.json();
+                this.customers = await res.json();
             } catch (error) {
-                console.error('Error fetching bookings:', error);
-                this.error = 'Could not fetch the bookings. Please try again later.';
+                console.error('Error fetching customers:', error);
+                this.error = 'Could not fetch the customers. Please try again later.';
             } finally {
                 this.isLoading = false;
             }
         },
 
-        async updateBookingStatus(id, status) {
+        async updateCustomerStatus(id, active) {
             try {
-                const res = await fetch(`${location.origin}/api/bookings/${id}`, {
+                const res = await fetch(`${location.origin}/api/customers/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authentication-Token': this.$store.state.auth_token
                     },
-                    body: JSON.stringify({ status })
+                    body: JSON.stringify({ active })
                 });
 
                 if (!res.ok) {
-                    throw new Error(`Failed to update booking status: HTTP ${res.status}`);
+                    throw new Error(`Failed to update customer status: HTTP ${res.status}`);
                 }
 
-                alert('Booking status updated');
-                this.fetchBookings(); // Refresh the bookings list
+                alert('Customer status updated');
+                this.fetchCustomers(); // Refresh the customer list
             } catch (error) {
-                console.error('Error updating booking status:', error);
-                alert('Could not update the booking status. Please try again later.');
+                console.error('Error updating customer status:', error);
+                alert('Could not update the customer status. Please try again later.');
             }
         }
     },
 
     async mounted() {
-        await this.fetchBookings();
+        await this.fetchCustomers();
     }
 }
