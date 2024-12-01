@@ -27,6 +27,7 @@ export default {
                             <td>{{ booking.status }}</td>
                             <td>
                                 <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Confirmed')" class="btn btn-success">Confirm</button>
+                                <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Rejected')" class="btn btn-danger">Reject</button>
                             </td>
                         </tr>
                     </tbody>

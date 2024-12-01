@@ -1,4 +1,3 @@
-from celery import shared_task
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -8,8 +7,7 @@ SMTP_PORT = 1025
 SENDER_EMAIL = 'ImTheOne@example'
 SENDER_PASSWORD = ''
 
-@shared_task
-def mail_them(to, sub, content):
+def mail_them(to,sub,content):
     msg = MIMEMultipart()
     msg['From'] = SENDER_EMAIL
     msg['To'] = to

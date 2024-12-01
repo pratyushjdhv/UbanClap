@@ -149,11 +149,24 @@ class booking_api(Resource):
             if booking_instance.customer_id != current_user.id:
                 return {'message': 'Not authorized to update this booking'}, 403
             booking_instance.status = data.get('status')
+            booking_instance.rating = data.get('rating', booking_instance.rating)
         else:
             return {'message': 'Not authorized to update booking status'}, 403
 
         try:
             db.session.commit()
+            # Send email notification to the customer about the booking status
+            if booking_instance.status in ['Confirmed', 'Rejected']:
+                customer_email = booking_instance.customer.email
+                subject = f"Booking {booking_instance.status}"
+                content = f"Your booking for the service '{booking_instance.service.name}' has been {booking_instance.status.lower()}."
+                mail_them.delay(customer_email, subject, content)
+            # Send email notification to the employee about the rating
+            if booking_instance.status == 'Completed':
+                employee_email = booking_instance.employee.email
+                subject = "Service Rating Received"
+                content = f"Your service '{booking_instance.service.name}' has been rated {booking_instance.rating} stars."
+                mail_them.delay(employee_email, subject, content)
             return {'message': 'Booking status updated'}, 200
         except Exception as e:
             db.session.rollback()
