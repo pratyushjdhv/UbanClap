@@ -6,7 +6,7 @@ from datetime import datetime
 from flask_caching import Cache
 
 api = Api(prefix='/api')
-cache = Cache(config={'CACHE_TYPE': 'simple'})
+cache = app.cache
 
 service_fields = {
     'id': fields.Integer,
@@ -130,23 +130,6 @@ class booking_api(Resource):
         return booking_instance
     
     @auth_required('token')
-    def post(self):
-        data = request.get_json()
-        new_booking = Booking(
-            customer_id=current_user.id,
-            service_id=data.get('service_id'),
-            date=datetime.strptime(data.get('date'), '%Y-%m-%d %H:%M:%S'),
-            status='Pending'
-        )
-        try:
-            db.session.add(new_booking)
-            db.session.commit()
-            return {'message': 'Booking created'}, 200
-        except Exception as e:
-            db.session.rollback()
-            return {'message': 'Something went wrong: ' + str(e)}, 500
-
-    @auth_required('token')
     def put(self, id):
         data = request.get_json()
         booking_instance = Booking.query.get(id)
@@ -193,8 +176,26 @@ class booking_list_api(Resource):
                     'status': booking.status
                 })
             return detailed_bookings
-        else:
+        else:     
             return {'message': 'Not authorized to view bookings'}, 403
+    
+    @auth_required('token')
+    def post(self):
+        data = request.get_json()
+        new_booking = Booking(
+            customer_id=current_user.id,
+            service_id=data.get('service_id'),
+            date=datetime.strptime(data.get('date'), '%Y-%m-%d %H:%M:%S'),
+            status='Pending'
+        )
+        try:
+            db.session.add(new_booking)
+            db.session.commit()
+            return {'message': 'Booking created'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Something went wrong: ' + str(e)}, 500
+
 
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')
