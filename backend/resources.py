@@ -164,31 +164,32 @@ class booking_list_api(Resource):
     def get(self):
         if current_user.has_role('emp'):
             bookings = Booking.query.all()
-            detailed_bookings = []
-            for booking in bookings:
-                detailed_bookings.append({
-                    'id': booking.id,
-                    'customer': {
-                        'id': booking.customer.id,
-                        'name': booking.customer.name,
-                        'email': booking.customer.email,
-                        'phone': booking.customer.phone,
-                        'address': booking.customer.address,
-                        'pincode': booking.customer.pincode
-                    },
-                    'service': {
-                        'id': booking.service.id,
-                        'service': booking.service.service,
-                        'name': booking.service.name,
-                        'description': booking.service.description,
-                        'price': booking.service.price
-                    },
-                    'date': booking.date,
-                    'status': booking.status
-                })
-            return detailed_bookings
         else:
-            return {'message': 'Not authorized to view bookings'}, 403
+            bookings = Booking.query.filter_by(customer_id=current_user.id).all()
+        
+        detailed_bookings = []
+        for booking in bookings:
+            detailed_bookings.append({
+                'id': booking.id,
+                'customer': {
+                    'id': booking.customer.id,
+                    'name': booking.customer.name,
+                    'email': booking.customer.email,
+                    'phone': booking.customer.phone,
+                    'address': booking.customer.address,
+                    'pincode': booking.customer.pincode
+                },
+                'service': {
+                    'id': booking.service.id,
+                    'service': booking.service.service,
+                    'name': booking.service.name,
+                    'description': booking.service.description,
+                    'price': booking.service.price
+                },
+                'date': booking.date,
+                'status': booking.status
+            })
+        return detailed_bookings
 
     @auth_required('token')
     def post(self):

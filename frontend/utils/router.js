@@ -7,6 +7,7 @@ import service_list from "../pages/service_list.js"
 import create_service from "../pages/create_service.js"
 import booking_management from "../pages/booking_management.js"
 import customer_list from "../pages/customer_list.js"
+import UserBookings from "../pages/UserBookings.js"
 
 const Home = {
     template: `<h1> this is home </h1>`
@@ -21,7 +22,8 @@ const routes = [
     { path: '/service/:id', component: service, props: true, meta: { requiresAuth: true } },
     { path: '/create-service', component: create_service, meta: { requiresAuth: true } },
     { path: '/manage-bookings', component: booking_management, meta: { requiresAuth: true, role: "emp" } },
-    { path: '/customer-list', component: customer_list, meta: { requiresAuth: true, role: "admin" } }
+    { path: '/customer-list', component: customer_list, meta: { requiresAuth: true, role: "admin" } },
+    { path: '/my-bookings', component: UserBookings, meta: { requiresAuth: true, role: "customer" } }
 ]
 
 const router = new VueRouter({
