@@ -13,6 +13,7 @@ export default {
                             <th>Phone</th>
                             <th>Address</th>
                             <th>Pincode</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,6 +23,10 @@ export default {
                             <td>{{ customer.phone }}</td>
                             <td>{{ customer.address }}</td>
                             <td>{{ customer.pincode }}</td>
+                            <td>
+                                <button v-if="customer.active" @click="updateCustomerStatus(customer.id, false)" class="btn btn-danger">Ban</button>
+                                <button v-else @click="updateCustomerStatus(customer.id, true)" class="btn btn-success">Unban</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,6 +62,28 @@ export default {
                 this.error = 'Could not fetch the customers. Please try again later.';
             } finally {
                 this.isLoading = false;
+            }
+        },
+        async updateCustomerStatus(id, active) {
+            try {
+                const res = await fetch(`${location.origin}/api/customers/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authentication-Token': this.$store.state.auth_token
+                    },
+                    body: JSON.stringify({ active })
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Failed to update customer status: HTTP ${res.status}`);
+                }
+
+                alert('Customer status updated');
+                this.fetchCustomers(); // Refresh the customer list
+            } catch (error) {
+                console.error('Error updating customer status:', error);
+                alert('Could not update the customer status. Please try again later.');
             }
         }
     },

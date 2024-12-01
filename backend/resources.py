@@ -1,7 +1,7 @@
 from flask import jsonify, request, current_app as app
 from flask_restful import Api, Resource, fields, marshal_with
 from flask_security import auth_required, current_user
-from backend.models import db, Customer, Services, Booking
+from backend.models import db, Customer, Services, Booking, Role
 from datetime import datetime
 from flask_caching import Cache
 from backend.celery.mail import mail_them
@@ -209,13 +209,36 @@ class customer_list_api(Resource):
     @marshal_with(customer_fields)
     def get(self):
         if current_user.has_role('admin'):
-            customers = Customer.query.all()
+            customers = Customer.query.filter(Customer.roles.any(Role.name != 'admin')).all()
             return customers
         else:
             return {'message': 'Not authorized to view customers'}, 403
+        
+class customer_api(Resource):
+    @auth_required('token')
+    def put(self, id):
+        if not current_user.has_role('admin'):
+            return {'message': 'Not authorized to update customer status'}, 403
+
+        customer = Customer.query.get(id)
+        if not customer:
+            return {'message': 'No such customer found'}, 404
+
+        data = request.get_json()
+        customer.active = data.get('active', customer.active)
+
+        try:
+            db.session.commit()
+            return {'message': 'Customer status updated'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'message': 'Something went wrong: ' + str(e)}, 500
+
+
 
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')
 api.add_resource(booking_api, '/bookings/<int:id>')
 api.add_resource(booking_list_api, '/bookings')
 api.add_resource(customer_list_api, '/customers')
+api.add_resource(customer_api, '/customers/<int:id>')
