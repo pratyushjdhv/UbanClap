@@ -18,7 +18,7 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="booking in bookings" :key="booking.id">
+                        <tr v-for="booking in sortedBookings" :key="booking.id">
                             <td>{{ booking.customer.name }}</td>
                             <td>{{ booking.customer.email }}</td>
                             <td>{{ booking.customer.phone }}</td>
@@ -40,6 +40,13 @@ export default {
             isLoading: false,
             error: null,
         };
+    },
+    computed: {
+        sortedBookings() {
+            return this.bookings
+                .filter(booking => booking.status !== 'Completed')
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
     },
     methods: {
         async fetchBookings() {
