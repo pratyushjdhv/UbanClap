@@ -9,7 +9,8 @@ export default {
                 <h2>Service Details:</h2>
                 <ul>
                     <li v-for="(value, key) in service" :key="key">
-                        {{ key }}: {{ value }}
+                        <span v-if="key !== 'employee'">{{ key }}: {{ value }}</span>
+                        <span v-else>employee: {{ service.employee.name }}</span>
                     </li>
                 </ul>
                 <button v-if="$store.state.role == 'customer'" @click="bookService" class="btn btn-primary">Book Service</button>
@@ -57,6 +58,7 @@ export default {
                     },
                     body: JSON.stringify({
                         service_id: this.service.id,
+                        emp_id: this.service.emp_id,
                         date: new Date().toISOString().slice(0, 19).replace('T', ' ')
                     })
                 });

@@ -9,6 +9,7 @@ export default {
                     <thead>
                         <tr>
                             <th>Service</th>
+                            <th>Employee</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
@@ -16,6 +17,7 @@ export default {
                     <tbody>
                         <tr v-for="booking in bookings" :key="booking.id">
                             <td>{{ booking.service.name }}</td>
+                            <td>{{ booking.employee.name }}</td>
                             <td>{{ booking.date }}</td>
                             <td>{{ booking.status }}</td>
                         </tr>

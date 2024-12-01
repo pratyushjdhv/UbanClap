@@ -14,7 +14,12 @@ service_fields = {
     'service': fields.String,
     'name': fields.String,
     'description': fields.String,
-    'price': fields.String
+    'price': fields.String,
+    'emp_id': fields.Integer,
+    'employee': fields.Nested({
+        'id': fields.Integer,
+        'name': fields.String
+    })
 }
 
 customer_fields = {
@@ -29,10 +34,12 @@ customer_fields = {
         'name': fields.String
     }))
 }
+
 booking_fields = {
     'id': fields.Integer,
     'customer': fields.Nested(customer_fields),
     'service': fields.Nested(service_fields),
+    'employee': fields.Nested(customer_fields),
     'date': fields.DateTime,
     'status': fields.String
 }
@@ -53,7 +60,7 @@ class services_api(Resource):
         res = Services.query.get(id)
         if not res:
             return {'message': 'No such service found'}, 404
-        if (res.user_id == current_user.id) or (current_user.has_role('admin')):
+        if (res.emp_id == current_user.id) or (current_user.has_role('admin')):
             data = request.get_json()
             res.service = data.get('service')
             res.name = data.get('name')
@@ -75,7 +82,7 @@ class services_api(Resource):
         res = Services.query.get(id)
         if not res:
             return {'message': 'No such service found'}, 404
-        if (res.user_id == current_user.id) or (current_user.has_role('admin')):
+        if (res.emp_id == current_user.id) or (current_user.has_role('admin')):
             try:
                 db.session.delete(res)
                 db.session.commit()
@@ -91,21 +98,14 @@ class service_list_api(Resource):
     @auth_required('token')
     @marshal_with(service_fields)
     def get(self):
-        serv = Services.query.all()
-        service_instance = [
-            {
-                'id': s.id,
-                'service': s.service,
-                'name': s.name,
-                'description': s.description,
-                'price': s.price
-            }
-            for s in serv
-        ]
-        return service_instance
+        services = Services.query.all()
+        return services
     
     @auth_required('token')
     def post(self):
+        if not current_user.has_role('emp'):
+            return {'message': 'Only employees can create services'}, 403
+
         data = request.get_json()
         if not data.get('service') or not data.get('name') or not data.get('description') or not data.get('price'):
             return {'message': 'All fields are required'}, 400
@@ -115,6 +115,7 @@ class service_list_api(Resource):
             name=data.get('name'),
             description=data.get('description'),
             price=data.get('price'),
+            emp_id=current_user.id
         )
         try:
             db.session.add(new_service)
@@ -163,9 +164,9 @@ class booking_list_api(Resource):
     @marshal_with(booking_fields)
     def get(self):
         if current_user.has_role('emp'):
-            bookings = Booking.query.all()
+            bookings = Booking.query.filter_by(emp_id=current_user.id).all()
         else:
-            bookings = Booking.query.filter_by(customer_id=current_user.id).all()
+            return {'message': 'Not authorized to view bookings'}, 403
         
         detailed_bookings = []
         for booking in bookings:
@@ -184,7 +185,20 @@ class booking_list_api(Resource):
                     'service': booking.service.service,
                     'name': booking.service.name,
                     'description': booking.service.description,
-                    'price': booking.service.price
+                    'price': booking.service.price,
+                    'emp_id': booking.service.emp_id,
+                    'employee': {
+                        'id': booking.service.employee.id,
+                        'name': booking.service.employee.name
+                    }
+                },
+                'employee': {
+                    'id': booking.employee.id,
+                    'name': booking.employee.name,
+                    'email': booking.employee.email,
+                    'phone': booking.employee.phone,
+                    'address': booking.employee.address,
+                    'pincode': booking.employee.pincode
                 },
                 'date': booking.date,
                 'status': booking.status
@@ -194,9 +208,13 @@ class booking_list_api(Resource):
     @auth_required('token')
     def post(self):
         data = request.get_json()
+        if not data.get('service_id') or not data.get('emp_id') or not data.get('date'):
+            return {'message': 'All fields are required'}, 400
+
         new_booking = Booking(
             customer_id=current_user.id,
             service_id=data.get('service_id'),
+            emp_id=data.get('emp_id'),
             date=datetime.strptime(data.get('date'), '%Y-%m-%d %H:%M:%S'),
             status='Pending'
         )

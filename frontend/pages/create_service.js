@@ -15,7 +15,7 @@ export default {
             service: '',
             name: '',
             description: '',
-            price: '',            
+            price: ''
         }
     },
 
@@ -38,7 +38,7 @@ export default {
                         service: this.service,
                         name: this.name,
                         description: this.description,
-                        price: this.price,
+                        price: this.price
                     })
                 });
                 if (res.ok) {
@@ -53,5 +53,5 @@ export default {
                 alert('Service not created: ' + error.message);
             }
         }
-    },
+    }
 }
