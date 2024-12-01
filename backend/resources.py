@@ -4,6 +4,7 @@ from flask_security import auth_required, current_user
 from backend.models import db, Customer, Services, Booking
 from datetime import datetime
 from flask_caching import Cache
+from backend.celery.mail import mail_them
 
 api = Api(prefix='/api')
 cache = app.cache
@@ -103,7 +104,7 @@ class service_list_api(Resource):
     @auth_required('token')
     def post(self):
         data = request.get_json()
-        if not data.get('service') or not data.get('name') or not data.get('description') or not data.get('price'):
+        if (not data.get('service') or not data.get('name') or not data.get('description') or not data.get('price')):
             return {'message': 'All fields are required'}, 400
 
         new_service = Services(
@@ -140,7 +141,14 @@ class booking_api(Resource):
             booking_instance.status = data.get('status')
             try:
                 db.session.commit()
-                return {'message': 'Booking status updated'}, 200
+                
+                # Send email notification to the customer
+                customer_email = booking_instance.customer.email
+                subject = f"Booking {booking_instance.status}"
+                content = f"Your booking for the service '{booking_instance.service.name}' has been {booking_instance.status.lower()}."
+                mail_them(customer_email, subject, content)
+                
+                return {'message': 'Booking status updated and customer notified'}, 200
             except Exception as e:
                 db.session.rollback()
                 return {'message': 'Something went wrong: ' + str(e)}, 500
@@ -176,9 +184,9 @@ class booking_list_api(Resource):
                     'status': booking.status
                 })
             return detailed_bookings
-        else:     
+        else:
             return {'message': 'Not authorized to view bookings'}, 403
-    
+
     @auth_required('token')
     def post(self):
         data = request.get_json()
@@ -195,7 +203,6 @@ class booking_list_api(Resource):
         except Exception as e:
             db.session.rollback()
             return {'message': 'Something went wrong: ' + str(e)}, 500
-
 
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')
