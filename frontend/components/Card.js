@@ -18,7 +18,7 @@ export default {
     methods: {
         async bookService() {
             try {
-                const res = await fetch(location.origin + '/api/booking', {
+                const res = await fetch(location.origin + '/api/bookings', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

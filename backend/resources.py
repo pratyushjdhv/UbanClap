@@ -16,10 +16,19 @@ service_fields = {
     'price': fields.String
 }
 
+customer_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'email': fields.String,
+    'phone': fields.String,
+    'address': fields.String,
+    'pincode': fields.String
+}
+
 booking_fields = {
     'id': fields.Integer,
-    'customer_id': fields.Integer,
-    'service_id': fields.Integer,
+    'customer': fields.Nested(customer_fields),
+    'service': fields.Nested(service_fields),
     'date': fields.DateTime,
     'status': fields.String
 }
@@ -137,6 +146,57 @@ class booking_api(Resource):
             db.session.rollback()
             return {'message': 'Something went wrong: ' + str(e)}, 500
 
+    @auth_required('token')
+    def put(self, id):
+        data = request.get_json()
+        booking_instance = Booking.query.get(id)
+        if not booking_instance:
+            return {'message': 'No such booking found'}, 404
+
+        if current_user.has_role('emp'):
+            booking_instance.status = data.get('status')
+            try:
+                db.session.commit()
+                return {'message': 'Booking status updated'}, 200
+            except Exception as e:
+                db.session.rollback()
+                return {'message': 'Something went wrong: ' + str(e)}, 500
+        else:
+            return {'message': 'Not authorized to update booking status'}, 403
+
+class booking_list_api(Resource):
+    @auth_required('token')
+    @marshal_with(booking_fields)
+    def get(self):
+        if current_user.has_role('emp'):
+            bookings = Booking.query.all()
+            detailed_bookings = []
+            for booking in bookings:
+                detailed_bookings.append({
+                    'id': booking.id,
+                    'customer': {
+                        'id': booking.customer.id,
+                        'name': booking.customer.name,
+                        'email': booking.customer.email,
+                        'phone': booking.customer.phone,
+                        'address': booking.customer.address,
+                        'pincode': booking.customer.pincode
+                    },
+                    'service': {
+                        'id': booking.service.id,
+                        'service': booking.service.service,
+                        'name': booking.service.name,
+                        'description': booking.service.description,
+                        'price': booking.service.price
+                    },
+                    'date': booking.date,
+                    'status': booking.status
+                })
+            return detailed_bookings
+        else:
+            return {'message': 'Not authorized to view bookings'}, 403
+
 api.add_resource(services_api, '/service/<int:id>')
 api.add_resource(service_list_api, '/services')
-api.add_resource(booking_api, '/booking')
+api.add_resource(booking_api, '/bookings/<int:id>')
+api.add_resource(booking_list_api, '/bookings')
