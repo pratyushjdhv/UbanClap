@@ -11,10 +11,6 @@ import UserBookings from "../pages/UserBookings.js";
 import admin_bookings from "../pages/admin_bookings.js";
 import customer_info from "../pages/customer_info.js";
 import home from "../pages/home.js";
-<<<<<<< HEAD
-import edit_service from "../pages/edit.js";
-=======
->>>>>>> f49e0ce (done now css remaininng)
 
 const routes = [
     { path: '/', component: home },
@@ -28,12 +24,7 @@ const routes = [
     { path: '/customer-list', component: customer_list, meta: { requiresAuth: true, role: "admin" } },
     { path: '/my-bookings', component: UserBookings, meta: { requiresAuth: true, role: "customer" } },
     { path: '/admin-bookings', component: admin_bookings, meta: { requiresAuth: true, role: "admin" } },
-<<<<<<< HEAD
-    { path: '/customer-info/:id', component: customer_info, props: true, meta: { requiresAuth: true, role: "admin" } },
-    { path: '/edit-service/:id', component: edit_service, props: true, meta: { requiresAuth: true, role: ["emp", "admin"] } } // Allow both emp and admin roles
-=======
     { path: '/customer-info/:id', component: customer_info, props: true, meta: { requiresAuth: true, role: "admin" } }
->>>>>>> f49e0ce (done now css remaininng)
 ];
 
 const router = new VueRouter({
@@ -46,16 +37,10 @@ router.beforeEach((to, from, next) => {
         if (!store.state.loggedIn) {
             next({
                 path: '/login',
-<<<<<<< HEAD
-            });
-        } else if (to.meta.role && !to.meta.role.includes(store.state.role)) {
-            alert('role not authorized');
-=======
                 query: { redirect: to.fullPath }
             });
         } else if (to.meta.role && to.meta.role !== store.state.role) {
             alert('Role not authorized');
->>>>>>> f49e0ce (done now css remaininng)
             next({ path: '/' });
         } else {
             next();
