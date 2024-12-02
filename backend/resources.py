@@ -256,6 +256,14 @@ class customer_list_api(Resource):
 
 class customer_api(Resource):
     @auth_required('token')
+    @marshal_with(customer_fields)
+    def get(self, id):
+        customer = Customer.query.get(id)
+        if not customer:
+            return {'message': 'No such customer found'}, 404
+        return customer
+
+    @auth_required('token')
     def put(self, id):
         if not current_user.has_role('admin'):
             return {'message': 'Not authorized to update customer status'}, 403

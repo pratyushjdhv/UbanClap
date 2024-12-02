@@ -27,7 +27,7 @@ export default {
                     </thead>
                     <tbody>
                         <tr v-for="customer in filteredCustomers" :key="customer.id">
-                            <td>{{ customer.name }}</td>
+                            <td @click="CustomerInfo(customer.id)" style="cursor: pointer; color: blue;">{{ customer.name }}</td>
                             <td>{{ customer.email }}</td>
                             <td>{{ customer.phone }}</td>
                             <td>{{ customer.address }}</td>
@@ -104,6 +104,9 @@ export default {
                 console.error('Error updating customer status:', error);
                 alert('Could not update the customer status. Please try again later.');
             }
+        },
+        CustomerInfo(id) {
+            this.$router.push(`/customer-info/${id}`);
         }
     },
     async mounted() {
