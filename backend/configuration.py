@@ -9,6 +9,8 @@ class development(configuration):
     SECURITY_PASSWORD_SALT = 'a_secret_to_be_kept'
     SECRET_KEY = "things_to_be_kept_secret"
     SECURITY_TOKEN_AUTHENTICATION_HEADER = 'Authentication-Token'
+    SECURITY_TOKEN_MAX_AGE = 36000  # Token expires after 10 hour change it afterwards please🙏🏻
+
     #SECURITY_LOGIN_URL = '/login'
     CACHE_TYPE =  "RedisCache"
     CACHE_DEFAULT_TIMEOUT = 30
