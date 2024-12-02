@@ -10,13 +10,11 @@ import customer_list from "../pages/customer_list.js"
 import UserBookings from "../pages/UserBookings.js"
 import admin_bookings from "../pages/admin_bookings.js"
 import customer_info from "../pages/customer_info.js" 
+import home from "../pages/home.js"
 
-const Home = {
-    template: `<h1> this is home </h1>`
-}
 
 const routes = [
-    { path: '/', component: Home },
+    { path: '/', component: home },
     { path: '/login', component: loginpage },
     { path: '/register', component: registerpage },
     { path: '/feed', component: service_list, meta: { requiresLogin: true } },
