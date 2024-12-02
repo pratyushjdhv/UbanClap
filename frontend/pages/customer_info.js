@@ -2,11 +2,10 @@ export default {
     props: ['id'],
     template: `
         <div>
-            <h1>Customer Info</h1>
+            <h1>Customer Details:</h1>
             <div v-if="isLoading">Loading...</div>
             <div v-else-if="error">{{ error }}</div>
             <div v-else>
-                <h2>Customer Details:</h2>
                 <ul>
                     <li>Name: {{ customer.name }}</li>
                     <li>Email: {{ customer.email }}</li>
@@ -15,6 +14,16 @@ export default {
                     <li>Pincode: {{ customer.pincode }}</li>
                 </ul>
                 <h2>Booking Requests:</h2>
+                <div class="mb-3">
+                    <label for="statusFilter">Filter by status:</label>
+                    <select id="statusFilter" v-model="selectedStatus" @change="filterBookings" class="form-control">
+                        <option value="">All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -25,7 +34,7 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="booking in bookings" :key="booking.id">
+                        <tr v-for="booking in filteredBookings" :key="booking.id">
                             <td>{{ booking.service.name }}</td>
                             <td>{{ booking.employee.name }}</td>
                             <td>{{ booking.date }}</td>
@@ -40,6 +49,8 @@ export default {
         return {
             customer: {},
             bookings: [],
+            filteredBookings: [],
+            selectedStatus: '',
             isLoading: false,
             error: null,
         };
@@ -84,11 +95,19 @@ export default {
                 }
 
                 this.bookings = await res.json();
+                this.filteredBookings = this.bookings; // Initialize filteredBookings
             } catch (error) {
                 console.error('Error fetching customer bookings:', error);
                 this.error = 'Could not fetch the customer bookings. Please try again later.';
             } finally {
                 this.isLoading = false;
+            }
+        },
+        filterBookings() {
+            if (this.selectedStatus) {
+                this.filteredBookings = this.bookings.filter(booking => booking.status === this.selectedStatus);
+            } else {
+                this.filteredBookings = this.bookings;
             }
         }
     },
