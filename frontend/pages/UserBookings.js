@@ -35,7 +35,7 @@ export default {
                                 <button 
                                     :class="{'btn btn-primary': true}" 
                                     :disabled="booking.status === 'Pending' || booking.status === 'Rejected' || booking.status === 'Completed'" 
-                                    @click="updateBookingStatus(booking.id, 'Completed')"
+                                    @click="openRatingModal(booking.id)"
                                 >
                                     Complete
                                 </button>
@@ -43,6 +43,30 @@ export default {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Rating Modal -->
+            <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ratingModalLabel">Rate the Service</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="rating">
+                                <span v-for="star in 5" :key="star" @click="setRating(star)" :class="{'text-warning': star <= rating, 'text-muted': star > rating}">
+                                    ★
+                                </span>
+                            </div>
+                            <textarea v-model="review" class="form-control mt-3" placeholder="Write your review here..."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" @click="submitRating">Submit</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `,
@@ -52,6 +76,9 @@ export default {
             selectedStatus: '',
             isLoading: false,
             error: null,
+            rating: 0,
+            review: '',
+            currentBookingId: null,
         };
     },
     computed: {
@@ -86,23 +113,43 @@ export default {
                 this.isLoading = false;
             }
         },
-        async updateBookingStatus(id, status) {
+        openRatingModal(bookingId) {
+            this.currentBookingId = bookingId;
+            this.rating = 0;
+            this.review = '';
+            const modal = new bootstrap.Modal(document.getElementById('ratingModal'));
+            modal.show();
+        },
+        setRating(star) {
+            this.rating = star;
+        },
+        async submitRating() {
             try {
-                const res = await fetch(`${location.origin}/api/bookings/${id}`, {
+                const res = await fetch(`${location.origin}/api/bookings/${this.currentBookingId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authentication-Token': this.$store.state.auth_token
                     },
-                    body: JSON.stringify({ status })
+                    body: JSON.stringify({ status: 'Completed', rating: this.rating, review: this.review })
                 });
 
                 if (!res.ok) {
                     throw new Error(`Failed to update booking status: HTTP ${res.status}`);
                 }
 
-                alert('Booking status updated');
-                this.fetchBookings(); // Refresh the booking list
+                alert('Booking status updated and rating submitted');
+                // Update the booking status in the local state
+                const updatedBooking = this.bookings.find(booking => booking.id === this.currentBookingId);
+                if (updatedBooking) {
+                    updatedBooking.status = 'Completed';
+                    updatedBooking.rating = this.rating;
+                    updatedBooking.review = this.review;
+                }
+                // Hide the modal
+                const modalElement = document.getElementById('ratingModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
             } catch (error) {
                 console.error('Error updating booking status:', error);
                 alert('Could not update the booking status. Please try again later.');

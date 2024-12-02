@@ -150,6 +150,7 @@ class booking_api(Resource):
                 return {'message': 'Not authorized to update this booking'}, 403
             booking_instance.status = data.get('status')
             booking_instance.rating = data.get('rating', booking_instance.rating)
+            booking_instance.review = data.get('review', booking_instance.review)
         else:
             return {'message': 'Not authorized to update booking status'}, 403
 
@@ -161,11 +162,11 @@ class booking_api(Resource):
                 subject = f"Booking {booking_instance.status}"
                 content = f"Your booking for the service '{booking_instance.service.name}' has been {booking_instance.status.lower()}."
                 mail_them.delay(customer_email, subject, content)
-            # Send email notification to the employee about the rating
+            # Send email notification to the employee about the rating and review
             if booking_instance.status == 'Completed':
                 employee_email = booking_instance.employee.email
-                subject = "Service Rating Received"
-                content = f"Your service '{booking_instance.service.name}' has been rated {booking_instance.rating} stars."
+                subject = "Service Rating and Review Received"
+                content = f"Your service '{booking_instance.service.name}' has been rated {booking_instance.rating} stars.\n\nReview:\n{booking_instance.review}"
                 mail_them.delay(employee_email, subject, content)
             return {'message': 'Booking status updated'}, 200
         except Exception as e:
