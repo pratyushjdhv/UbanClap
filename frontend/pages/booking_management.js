@@ -2,6 +2,16 @@ export default {
     template: `
         <div>
             <h1>Booking Management</h1>
+            <div class="mb-3">
+                <label for="statusFilter">Filter by status:</label>
+                <select id="statusFilter" v-model="selectedStatus" @change="fetchBookings" class="form-control">
+                    <option value="">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
             <div v-if="isLoading">Loading...</div>
             <div v-else-if="error">{{ error }}</div>
             <div v-else>
@@ -18,7 +28,7 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="booking in sortedBookings" :key="booking.id">
+                        <tr v-for="booking in filteredBookings" :key="booking.id">
                             <td>{{ booking.customer.name }}</td>
                             <td>{{ booking.customer.email }}</td>
                             <td>{{ booking.customer.phone }}</td>
@@ -38,15 +48,17 @@ export default {
     data() {
         return {
             bookings: [],
+            selectedStatus: '',
             isLoading: false,
             error: null,
         };
     },
     computed: {
-        sortedBookings() {
-            return this.bookings
-                .filter(booking => booking.status !== 'Completed')
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
+        filteredBookings() {
+            if (this.selectedStatus) {
+                return this.bookings.filter(booking => booking.status === this.selectedStatus);
+            }
+            return this.bookings;
         }
     },
     methods: {

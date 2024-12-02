@@ -2,10 +2,19 @@ export default {
     template: `
         <div>
             <h1>My Bookings</h1>
+            <div class="mb-3">
+                <label for="statusFilter">Filter by status:</label>
+                <select id="statusFilter" v-model="selectedStatus" @change="fetchBookings" class="form-control">
+                    <option value="">All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
             <div v-if="isLoading">Loading...</div>
             <div v-else-if="error">{{ error }}</div>
             <div v-else>
-                <h2>Active Bookings</h2>
                 <table class="table">
                     <thead>
                         <tr>
@@ -17,39 +26,20 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="booking in activeBookings" :key="booking.id">
+                        <tr v-for="booking in filteredBookings" :key="booking.id">
                             <td>{{ booking.service.name }}</td>
                             <td>{{ booking.employee.name }}</td>
                             <td>{{ booking.date }}</td>
                             <td>{{ booking.status }}</td>
                             <td>
                                 <button 
-                                    :class="{'btn btn-primary': true, 'disabled': booking.status === 'Pending'}" 
-                                    :disabled="booking.status === 'Pending'" 
+                                    :class="{'btn btn-primary': true}" 
+                                    :disabled="booking.status === 'Pending' || booking.status === 'Rejected' || booking.status === 'Completed'" 
                                     @click="updateBookingStatus(booking.id, 'Completed')"
                                 >
                                     Complete
                                 </button>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h2>Booking History</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Employee</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="booking in bookingHistory" :key="booking.id">
-                            <td>{{ booking.service.name }}</td>
-                            <td>{{ booking.employee.name }}</td>
-                            <td>{{ booking.date }}</td>
-                            <td>{{ booking.status }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,16 +49,17 @@ export default {
     data() {
         return {
             bookings: [],
+            selectedStatus: '',
             isLoading: false,
             error: null,
         };
     },
     computed: {
-        activeBookings() {
-            return this.bookings.filter(booking => booking.status !== 'Completed');
-        },
-        bookingHistory() {
-            return this.bookings.filter(booking => booking.status === 'Completed');
+        filteredBookings() {
+            if (this.selectedStatus) {
+                return this.bookings.filter(booking => booking.status === this.selectedStatus);
+            }
+            return this.bookings;
         }
     },
     methods: {
