@@ -177,7 +177,9 @@ class booking_list_api(Resource):
     @auth_required('token')
     @marshal_with(booking_fields)
     def get(self):
-        if current_user.has_role('emp'):
+        if current_user.has_role('admin'):
+            bookings = Booking.query.all()
+        elif current_user.has_role('emp'):
             bookings = Booking.query.filter_by(emp_id=current_user.id).all()
         elif current_user.has_role('customer'):
             bookings = Booking.query.filter_by(customer_id=current_user.id).all()

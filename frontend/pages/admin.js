@@ -4,6 +4,7 @@ export default {
             <h1>Admin Dashboard</h1>
             <button @click="create_csv" class="btn btn-primary mb-3">Get Blog Data</button>
             <button @click="$router.push('/customer-list')" class="btn btn-secondary mb-3">View Customer List</button>
+            <button @click="$router.push('/admin-bookings')" class="btn btn-info mb-3">View Booking Requests</button>
         </div>
     `,
     methods: {
