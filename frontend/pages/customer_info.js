@@ -1,49 +1,54 @@
 export default {
     props: ['id'],
     template: `
-        <div>
-            <h1>Customer Details:</h1>
-            <div v-if="isLoading">Loading...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <ul>
-                    <li>Name: {{ customer.name }}</li>
-                    <li>Email: {{ customer.email }}</li>
-                    <li>Phone: {{ customer.phone }}</li>
-                    <li>Address: {{ customer.address }}</li>
-                    <li>Pincode: {{ customer.pincode }}</li>
-                </ul>
-                <h2>Booking Requests:</h2>
-                <div class="mb-3">
-                    <label for="statusFilter">Filter by status:</label>
-                    <select id="statusFilter" v-model="selectedStatus" @change="filterBookings" class="form-control">
-                        <option value="">All</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Employee</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="booking in filteredBookings" :key="booking.id">
-                            <td>{{ booking.service.name }}</td>
-                            <td>{{ booking.employee.name }}</td>
-                            <td>{{ booking.date }}</td>
-                            <td>{{ booking.status }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="customer-info-container">
+    <h1 class="customer-info-title">Customer Details:</h1>
+    <div v-if="isLoading" class="loading-text">Loading...</div>
+    <div v-else-if="error" class="error-text">{{ error }}</div>
+    <div v-else>
+        <div class="customer-details-box">
+            <ul>
+                <li><strong>Name:</strong> {{ customer.name }}</li>
+                <li><strong>Email:</strong> {{ customer.email }}</li>
+                <li><strong>Phone:</strong> {{ customer.phone }}</li>
+                <li><strong>Address:</strong> {{ customer.address }}</li>
+                <li><strong>Pincode:</strong> {{ customer.pincode }}</li>
+            </ul>
         </div>
+
+        <h2 class="booking-title">Booking Requests:</h2>
+        
+        <div class="mb-3">
+            <label for="statusFilter" class="form-label">Filter by status:</label>
+            <select id="statusFilter" v-model="selectedStatus" @change="filterBookings" class="form-control">
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Employee</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="booking in filteredBookings" :key="booking.id">
+                    <td>{{ booking.service.name }}</td>
+                    <td>{{ booking.employee.name }}</td>
+                    <td>{{ booking.date }}</td>
+                    <td>{{ booking.status }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
     `,
     data() {
         return {

@@ -1,35 +1,37 @@
 export default {
-    template:`
-        <div>
-            <h1>Register</h1>
-            <input type="text" v-model="name" placeholder="Name">
-            <input type="text" v-model="email" placeholder="Email">
-            <input type="password" v-model="password" placeholder="Password">
-            <input type="number" v-model="phone" placeholder="Phone">
-            <input type="text" v-model="address" placeholder="Address">
-            <input type="text" v-model="pincode" placeholder="Pincode">
-            <select v-model="role">
-                <option value="customer">customer</option>
-                <option value="emp">employee</option>
+    template: `
+    <div class="register-container">
+        <div class="register-box">
+            <h1 class="register-title">Register</h1>
+            <input type="text" v-model="name" class="register-input" placeholder="Name" required>
+            <input type="text" v-model="email" class="register-input" placeholder="Email" required>
+            <input type="password" v-model="password" class="register-input" placeholder="Password" required>
+            <input type="number" v-model="phone" class="register-input" placeholder="Phone" required>
+            <input type="text" v-model="address" class="register-input" placeholder="Address" required>
+            <input type="text" v-model="pincode" class="register-input" placeholder="Pincode" required>
+            <select v-model="role" class="register-input">
+                <option value="customer">Customer</option>
+                <option value="emp">Employee</option>
             </select>
-            <button @click='register_user'>Register</button>
+            <button @click='register_user' class="register-button">Register</button>
         </div>
+    </div>
     `,
 
-    data(){
-        return{
-            name:'',
-            email:'',
-            password:'',
-            phone:'',
-            address:'',
-            pincode:'',
-            role :'',
+    data() {
+        return {
+            name: '',
+            email: '',
+            password: '',
+            phone: '',
+            address: '',
+            pincode: '',
+            role: '',
         }
     },
 
-    methods:{
-        async register_user(){
+    methods: {
+        async register_user() {
             try {
                 const res = await fetch(location.origin + '/register', {
                     method: 'POST',

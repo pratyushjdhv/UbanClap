@@ -1,13 +1,27 @@
 export default {
     template:`
-        <div>
-            <h1>Create Service</h1>
-            <input v-model="service" placeholder="Service" class="form-control mb-3"> 
-            <input v-model="name" placeholder="Name" class="form-control mb-3"> 
-            <input v-model="description" placeholder="Description" class="form-control mb-3">
-            <input type="number" v-model="price" placeholder="Price" class="form-control mb-3">
-            <button @click="create_service" class="btn btn-primary">Create Service</button>          
-        </div>    
+    <div class="create-service-container">
+        <div class="create-service-box">
+            <h1 class="create-service-title">Create Service</h1>
+            <div class="form-group">
+                <label class="form-label">Service</label>
+                <input v-model="service" placeholder="Service" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input v-model="name" placeholder="Name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <input v-model="description" placeholder="Description" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Price</label>
+                <input type="number" v-model="price" placeholder="Price" class="form-control">
+            </div>
+            <button @click="create_service" class="btn btn-primary">Create Service</button>
+        </div>
+    </div>
     `,
 
     data() {

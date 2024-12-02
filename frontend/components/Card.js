@@ -1,13 +1,22 @@
 export default {
     props: ["service", "name", "description", "price", "service_id"],
     template: `
-        <div class='container'>
-            <h1 @click="$router.push('/service/'+ service_id)" >{{service_id}}. {{service}}</h1>
-            <p>{{name}}</p>
-            <p>{{price}}</p>
-            <button v-if="canEditOrDelete" @click="editService" class="btn btn-warning">Edit</button>
-            <button v-if="canEditOrDelete" @click="deleteService" class="btn btn-danger">Delete</button>
-        </div>
+    <div class="card-container">
+    <!-- Service Title -->
+    <h1 @click="$router.push('/service/' + service_id)" class="card-title">
+        {{ service_id }}. {{ service }}
+    </h1>
+    
+    <!-- Service Name and Price -->
+    <p class="card-name">Name: {{ name }}</p>
+    <p class="card-price">₹{{ price }}</p>
+    
+    <!-- Action Buttons (Edit & Delete) -->
+    <div class="card-actions">
+        <button v-if="canEditOrDelete" @click="editService" class="btn btn-info">Edit</button>
+        <button v-if="canEditOrDelete" @click="deleteService" class="btn btn-danger">Delete</button>
+    </div>
+</div>
     `,
     computed: {
         canEditOrDelete() {

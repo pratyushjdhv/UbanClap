@@ -318,6 +318,29 @@ class ratings_summary_api(Resource):
         return {"totalRatings": count_ratings, "averageRating": average_rating}
 
 
+class user_list_api(Resource):
+    @auth_required("token")
+    def get(self):
+        if not current_user.has_role("admin"):
+            return {"message": "Not authorized to view user list"}, 403
+
+        users = Customer.query.all()
+        user_list = []
+        for user in users:
+            user_data = {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "phone": user.phone,
+                "address": user.address,
+                "pincode": user.pincode,
+                "roles": [{"name": role.name} for role in user.roles]
+            }
+            user_list.append(user_data)
+
+        return user_list, 200
+
+
 api.add_resource(ratings_summary_api, "/ratings-summary")
 api.add_resource(services_api, "/service/<int:id>")
 api.add_resource(service_list_api, "/services")
@@ -325,3 +348,4 @@ api.add_resource(booking_api, "/bookings/<int:id>")
 api.add_resource(booking_list_api, "/bookings")
 api.add_resource(customer_list_api, "/customers")
 api.add_resource(customer_api, "/customers/<int:id>")
+api.add_resource(user_list_api, "/users")

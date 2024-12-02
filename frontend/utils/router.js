@@ -11,6 +11,7 @@ import UserBookings from "../pages/UserBookings.js";
 import admin_bookings from "../pages/admin_bookings.js";
 import customer_info from "../pages/customer_info.js";
 import home from "../pages/home.js";
+import edit_service from "../pages/edit.js"; // Import the edit service component
 
 const routes = [
     { path: '/', component: home },
@@ -24,7 +25,8 @@ const routes = [
     { path: '/customer-list', component: customer_list, meta: { requiresAuth: true, role: "admin" } },
     { path: '/my-bookings', component: UserBookings, meta: { requiresAuth: true, role: "customer" } },
     { path: '/admin-bookings', component: admin_bookings, meta: { requiresAuth: true, role: "admin" } },
-    { path: '/customer-info/:id', component: customer_info, props: true, meta: { requiresAuth: true, role: "admin" } }
+    { path: '/customer-info/:id', component: customer_info, props: true, meta: { requiresAuth: true, role: "admin" } },
+    { path: '/edit-service/:id', component: edit_service, props: true, meta: { requiresAuth: true } } // Add the edit service route
 ];
 
 const router = new VueRouter({

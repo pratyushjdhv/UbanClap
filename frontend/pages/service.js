@@ -1,24 +1,29 @@
 export default {
     props: ['id'],
     template: `
-        <div>
-            <h1>Service Page</h1>
-            <div v-if="isLoading">Loading...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <h2>Service Details:</h2>
+    <div class="service-page-container">
+    <div v-if="isLoading">Loading...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <div v-else>
+        <div class="service-details-box">
+            <h1>Service Details:</h1>
+            <div class="service-details-container">
                 <ul>
-                    <li v-for="(value, key) in service" :key="key">
-                        <span v-if="key !== 'employee'">{{ key }}: {{ value }}</span>
-                        <span v-else>employee: {{ service.employee.name }}</span>
+                    <li v-for="(value, key) in service" :key="key" v-if="key !== 'id' && key !== 'emp_id'">
+                        <span v-if="key !== 'employee'">{{ key }}:</span>
+                        <span v-if="key !== 'employee'">{{ value }}</span>
+                        <span v-else>Employee: {{ service.employee.name }}</span>
                     </li>
                 </ul>
-                <div v-if="$store.state.role == 'customer'">
-                    <input type="datetime-local" v-model="bookingDateTime" class="form-control mb-3" />
-                    <button @click="bookService" class="btn btn-primary">Book Service</button>
-                </div>
+            </div>
+            <div v-if="$store.state.role == 'customer'">
+                <input type="datetime-local" v-model="bookingDateTime" class="form-control mb-3" />
+                <button @click="bookService" class="btn btn-primary">Book Service</button>
             </div>
         </div>
+    </div>
+</div>
+
     `,
     data() {
         return {

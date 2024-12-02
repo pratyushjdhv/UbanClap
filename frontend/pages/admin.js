@@ -1,16 +1,31 @@
 export default {
     template: `
-        <div>
-            <h1>Admin Dashboard</h1>
-            <button @click="create_csv" class="btn btn-primary mb-3">Get Blog Data</button>
-            <button @click="$router.push('/customer-list')" class="btn btn-secondary mb-3">View Customer List</button>
-            <button @click="$router.push('/admin-bookings')" class="btn btn-info mb-3">View Booking Requests</button>
-            <div class="container">
-            <canvas id="bookingChart" width= '360' height='360'></canvas>
-            </div>
-            
-        </div>
+    <div class="admin-dashboard">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+    <div class="dashboard-buttons">
+      <button @click="create_csv" class="btn btn-primary">Get Blog Data</button>
+      <button @click="$router.push('/customer-list')" class="btn btn-secondary">View Customer List</button>
+      <button @click="$router.push('/admin-bookings')" class="btn btn-info">View Booking Requests</button>
+    </div>
+    <div class="charts-container">
+      <div class="chart">
+        <canvas id="bookingChart" width="360" height="360"></canvas>
+      </div>
+      <div class="chart mt-4">
+        <canvas id="userChart" width="360" height="360"></canvas>
+      </div>
+    </div>
+  </div>
     `,
+    data() {
+        return {
+            bookings: [],
+            users: {
+                customers: 0,
+                employees: 0
+            }
+        };
+    },
     methods: {
         async create_csv() {
             const res = await fetch(location.origin + '/createcsv');
@@ -39,14 +54,34 @@ export default {
                     throw new Error(`Failed to fetch bookings: HTTP ${res.status}`);
                 }
 
-                const bookings = await res.json();
-                this.renderChart(bookings);
+                this.bookings = await res.json();
+                this.renderBookingChart();
             } catch (error) {
                 console.error('Error fetching bookings:', error);
             }
         },
-        renderChart(bookings) {
-            const statusCounts = bookings.reduce((acc, booking) => {
+        async fetchUserData() {
+            try {
+                const res = await fetch(`${location.origin}/api/users`, {
+                    headers: {
+                        'Authentication-Token': this.$store.state.auth_token
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch users: HTTP ${res.status}`);
+                }
+
+                const users = await res.json();
+                this.users.customers = users.filter(user => user.roles[0].name === 'customer').length;
+                this.users.employees = users.filter(user => user.roles[0].name === 'emp').length;
+                this.renderUserChart();
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        },
+        renderBookingChart() {
+            const statusCounts = this.bookings.reduce((acc, booking) => {
                 acc[booking.status] = (acc[booking.status] || 0) + 1;
                 return acc;
             }, {});
@@ -77,9 +112,38 @@ export default {
                     }
                 }
             });
+        },
+        renderUserChart() {
+            const data = {
+                labels: ['Customers', 'Employees'],
+                datasets: [{
+                    data: [this.users.customers, this.users.employees],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                }]
+            };
+
+            const ctx = document.getElementById('userChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'User Distribution'
+                        }
+                    }
+                }
+            });
         }
     },
     async mounted() {
         await this.fetchBookingData();
+        await this.fetchUserData();
     }
 }

@@ -1,49 +1,51 @@
 export default {
     template: `
-        <div>
-            <h1>Booking Management</h1>
-            <div class="mb-3">
-                <label for="statusFilter">Filter by status:</label>
-                <select id="statusFilter" v-model="selectedStatus" @change="fetchBookings" class="form-control">
-                    <option value="">All</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Completed">Completed</option>
-                </select>
-            </div>
-            <div v-if="isLoading">Loading...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Customer Email</th>
-                            <th>Customer Phone</th>
-                            <th>Service</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="booking in filteredBookings" :key="booking.id">
-                            <td>{{ booking.customer.name }}</td>
-                            <td>{{ booking.customer.email }}</td>
-                            <td>{{ booking.customer.phone }}</td>
-                            <td>{{ booking.service.name }}</td>
-                            <td>{{ booking.date }}</td>
-                            <td>{{ booking.status }}</td>
-                            <td>
-                                <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Confirmed')" class="btn btn-success">Confirm</button>
-                                <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Rejected')" class="btn btn-danger">Reject</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="booking-management-container">
+    <div class="booking-management-box">
+        <h1 class="booking-management-title">Booking Management</h1>
+        <div class="mb-4">
+            <label for="statusFilter" class="form-label">Filter by Status:</label>
+            <select id="statusFilter" v-model="selectedStatus" @change="fetchBookings" class="form-control">
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Completed">Completed</option>
+            </select>
         </div>
+        <div v-if="isLoading" class="loading-text">Loading...</div>
+        <div v-else-if="error" class="error-text">{{ error }}</div>
+        <div v-else>
+            <table class="table booking-table">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Customer Email</th>
+                        <th>Customer Phone</th>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="booking in filteredBookings" :key="booking.id">
+                        <td>{{ booking.customer.name }}</td>
+                        <td>{{ booking.customer.email }}</td>
+                        <td>{{ booking.customer.phone }}</td>
+                        <td>{{ booking.service.name }}</td>
+                        <td>{{ booking.date }}</td>
+                        <td>{{ booking.status }}</td>
+                        <td>
+                            <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Confirmed')" class="btn btn-success btn-action">Confirm</button>
+                            <button v-if="booking.status === 'Pending'" @click="updateBookingStatus(booking.id, 'Rejected')" class="btn btn-danger btn-action">Reject</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
     `,
     data() {
         return {

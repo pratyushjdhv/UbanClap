@@ -1,18 +1,22 @@
 export default {
     props: ['id'],
     template: `
-        <div>
-            <h1>Edit Service</h1>
-            <div v-if="isLoading">Loading...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <input v-model="service" placeholder="Service" class="form-control mb-3"> 
-                <input v-model="name" placeholder="Name" class="form-control mb-3"> 
-                <input v-model="description" placeholder="Description" class="form-control mb-3">
-                <input type="number" v-model="price" placeholder="Price" class="form-control mb-3">
-                <button @click="updateService" class="btn btn-primary">Update Service</button>
-            </div>
+    <div class="edit-service-container">
+    <div class="edit-service-box">
+        <h1 class="edit-service-title">Edit Service</h1>
+        <div v-if="isLoading" class="loading-text">Loading...</div>
+        <div v-else-if="error" class="error-text">{{ error }}</div>
+        <div v-else>
+            <input v-model="service" placeholder="Service" class="form-control mb-3"> 
+            <input v-model="name" placeholder="Name" class="form-control mb-3"> 
+            <input v-model="description" placeholder="Description" class="form-control mb-3">
+            <input type="number" v-model="price" placeholder="Price" class="form-control mb-3">
+            <button @click="updateService" class="btn btn-primary">Update Service</button>
         </div>
+    </div>
+</div>
+
+
     `,
     data() {
         return {
