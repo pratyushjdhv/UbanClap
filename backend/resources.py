@@ -230,7 +230,7 @@ class booking_list_api(Resource):
             customer_id=current_user.id,
             service_id=data.get('service_id'),
             emp_id=data.get('emp_id'),
-            date=datetime.strptime(data.get('date'), '%Y-%m-%d %H:%M:%S'),
+            date=datetime.strptime(data.get('date'), '%Y-%m-%dT%H:%M'),  # Adjust the format if necessary
             status='Pending'
         )
         try:

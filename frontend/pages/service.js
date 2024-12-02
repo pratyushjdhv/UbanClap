@@ -13,7 +13,10 @@ export default {
                         <span v-else>employee: {{ service.employee.name }}</span>
                     </li>
                 </ul>
-                <button v-if="$store.state.role == 'customer'" @click="bookService" class="btn btn-primary">Book Service</button>
+                <div v-if="$store.state.role == 'customer'">
+                    <input type="datetime-local" v-model="bookingDateTime" class="form-control mb-3" />
+                    <button @click="bookService" class="btn btn-primary">Book Service</button>
+                </div>
             </div>
         </div>
     `,
@@ -22,6 +25,7 @@ export default {
             service: {},
             isLoading: false,
             error: null,
+            bookingDateTime: ''
         };
     },
     methods: {
@@ -49,6 +53,11 @@ export default {
             }
         },
         async bookService() {
+            if (!this.bookingDateTime) {
+                alert('Please select a date and time for the booking.');
+                return;
+            }
+
             try {
                 const res = await fetch(`${location.origin}/api/bookings`, {
                     method: 'POST',
@@ -59,7 +68,7 @@ export default {
                     body: JSON.stringify({
                         service_id: this.service.id,
                         emp_id: this.service.emp_id,
-                        date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                        date: this.bookingDateTime
                     })
                 });
                 if (res.ok) {
