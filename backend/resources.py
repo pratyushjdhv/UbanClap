@@ -5,6 +5,7 @@ from backend.models import db, Customer, Services, Booking, Role
 from datetime import datetime
 from flask_caching import Cache
 from backend.celery.mail import mail_them
+import logging
 
 api = Api(prefix="/api")
 cache = app.cache
@@ -64,15 +65,13 @@ class services_api(Resource):
             res.price = data.get("price")
             try:
                 db.session.commit()
-                cache.delete(
-                    f"service_{id}"
-                )  # Delete the cache for the specific service
+                cache.delete(f"service_{id}")  # Delete the cache for the specific service
                 return {"message": "Service updated"}, 200
             except:
                 db.session.rollback()
                 return {"message": "Something went wrong"}, 500
         else:
-            return {"message": "not authorized to edit this"}, 403
+            return {"message": "Not authorized to edit this"}, 403
 
     @auth_required("token")
     @marshal_with(service_fields)
@@ -82,17 +81,19 @@ class services_api(Resource):
             return {"message": "No such service found"}, 404
         if (res.emp_id == current_user.id) or (current_user.has_role("admin")):
             try:
+                # Check for related bookings
+                if Booking.query.filter_by(service_id=id).count() > 0:
+                    return {"message": "Cannot delete service with related bookings"}, 400
                 db.session.delete(res)
                 db.session.commit()
-                cache.delete(
-                    f"service_{id}"
-                )  # Delete the cache for the specific service
+                cache.delete(f"service_{id}")  # Delete the cache for the specific service
                 return {"message": "Service deleted"}, 200
-            except:
+            except Exception as e:
                 db.session.rollback()
-                return {"message": "Something went wrong"}, 500
+                logging.error(f"Error deleting service: {e}")
+                return {"message": "Something went wrong: " + str(e)}, 500
         else:
-            return {"message": "not authorized to delete this"}, 403
+            return {"message": "Not authorized to delete this"}, 403
 
 
 class service_list_api(Resource):
