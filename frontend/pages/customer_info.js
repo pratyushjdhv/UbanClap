@@ -17,7 +17,7 @@ export default {
         </div>
 
         <h2 class="booking-title">Booking Requests:</h2>
-        
+
         <div class="mb-3">
             <label for="statusFilter" class="form-label">Filter by status:</label>
             <select id="statusFilter" v-model="selectedStatus" @change="filterBookings" class="form-control">
@@ -49,6 +49,7 @@ export default {
         </table>
     </div>
 </div>
+
     `,
     data() {
         return {

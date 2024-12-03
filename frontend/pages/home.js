@@ -80,15 +80,15 @@ export default {
                 </div>
             </div>
         </div>
-        <div class='container' style='height:100%; width:100%; '>
-    <img 
-        src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1696852847761-574450.jpeg" 
-        style="position: relative;left:650px; top:50px; max-width: 40%; height: auto; display: block; object-fit: cover;" 
-        
-    />
-</div>
+        <div class="container" style="height: 100%; width: 100%;">
+            <img
+                src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1696852847761-574450.jpeg"
+                style="position: relative; left: 650px; top: 50px; max-width: 40%; height: auto; display: block; object-fit: cover;"
+            />
+        </div>
     </div>
 </div>
+
 
     `,
     data() {

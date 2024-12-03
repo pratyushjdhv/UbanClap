@@ -106,15 +106,15 @@ body {
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .navbar-nav {
-    text-align: center;
+      text-align: center;
   }
 
   .navbar-nav .nav-item {
-    margin: 10px 0;
+      margin: 10px 0;
   }
 
   .navbar-toggler-icon {
-    color: var(--primary-color);
+      color: var(--primary-color);
   }
 }
 
@@ -182,11 +182,7 @@ button.btn-danger:hover {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
 }
 
 /* Solid background for the form box */
@@ -246,11 +242,7 @@ button.btn-primary:hover {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
   padding: 20px;
 }
 .booking-management-container #statusFilter {
@@ -330,7 +322,6 @@ button.btn-primary:hover {
 .btn-action {
   padding: 8px 12px;
   font-size: 0.9rem;
-  margin-right: 5px;
 }
 
 .loading-text {
@@ -347,11 +338,7 @@ button.btn-primary:hover {
 
 /* service.js page */
 .service-page-container {
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -642,9 +629,7 @@ button.btn-primary:hover {
 }
 
 .user-list-container .table tr:nth-child(even) {
-  background-color: var(
-    --background-color
-  ); /* Darker background for row contrast */
+  background-color: var(--background-color); /* Darker background for row contrast */
 }
 
 .user-list-container .table tr:hover {
@@ -695,11 +680,7 @@ button.btn-primary:hover {
 /* Customer Info Container */
 .customer-info-container {
   padding: 20px;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  ); /* Gradient background */
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8)); /* Gradient background */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -841,11 +822,7 @@ button.btn-primary:hover {
 
 /* Booking List Page */
 .booking-list-container {
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
   min-height: 100vh;
   padding: 40px;
   display: flex;
@@ -908,16 +885,16 @@ button.btn-primary:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .create-service-container {
-    padding: 20px;
-    width: 90%;
+      padding: 20px;
+      width: 90%;
   }
 
   .create-service-title {
-    font-size: 1.5rem;
+      font-size: 1.5rem;
   }
 
   .form-control {
-    font-size: 1rem;
+      font-size: 1rem;
   }
 }
 
@@ -992,11 +969,7 @@ input:focus {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
 }
 
 .login-box {
@@ -1072,12 +1045,12 @@ input:focus {
 /* Responsive Design */
 @media (max-width: 768px) {
   .login-box {
-    padding: 30px;
-    width: 90%;
+      padding: 30px;
+      width: 90%;
   }
 
   .login-input {
-    font-size: 1rem;
+      font-size: 1rem;
   }
 }
 
@@ -1087,11 +1060,7 @@ input:focus {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
 }
 
 .register-box {
@@ -1147,12 +1116,12 @@ input:focus {
 /* Responsive Design */
 @media (max-width: 768px) {
   .register-box {
-    padding: 30px;
-    width: 90%;
+      padding: 30px;
+      width: 90%;
   }
 
   .register-input {
-    font-size: 1rem;
+      font-size: 1rem;
   }
 }
 
@@ -1227,11 +1196,7 @@ button.btn-danger {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  ); /* Gradient background */
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8)); /* Gradient background */
   padding: 20px;
 }
 
@@ -1256,9 +1221,7 @@ button.btn-danger {
 
 /* Form inputs */
 .form-control {
-  background-color: var(
-    --background-color
-  ); /* Dark background for the input fields */
+  background-color: var(--background-color); /* Dark background for the input fields */
   color: var(--text-color); /* Muted light gray text */
   border: 1px solid var(--secondary-color); /* Light blue border */
   padding: 12px;
@@ -1308,11 +1271,7 @@ button.btn-primary:hover {
 
 /* User Bookings Container */
 .user-bookings-container {
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  );
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8));
   padding: 20px;
   min-height: 100vh;
   display: flex;
@@ -1366,9 +1325,7 @@ button.btn-primary:hover {
 }
 
 .user-bookings-container .table tr:nth-child(even) {
-  background-color: var(
-    --background-color
-  ); /* Slightly lighter dark for row contrast */
+  background-color: var(--background-color); /* Slightly lighter dark for row contrast */
 }
 
 .user-bookings-container .table tr:hover {
@@ -1422,11 +1379,7 @@ button.btn-primary:hover {
 
 /* Employee Home Container */
 .employee-home-container {
-  background: linear-gradient(
-    45deg,
-    rgba(184, 39, 26, 0.8),
-    rgba(29, 39, 56, 0.8)
-  ); /* Gradient background */
+  background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8)); /* Gradient background */
   padding: 20px;
   min-height: 100vh;
   display: flex;
@@ -1473,17 +1426,17 @@ button.btn-primary:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .employee-home-container {
-    padding: 15px;
+      padding: 15px;
   }
   .employee-home-title {
-    font-size: 1.8rem;
+      font-size: 1.8rem;
   }
   .employee-home-subtitle {
-    font-size: 1.3rem;
+      font-size: 1.3rem;
   }
   .chart-container {
-    width: 100%;
-    padding: 10px;
+      width: 100%;
+      padding: 10px;
   }
 }
 
@@ -1499,8 +1452,8 @@ button.btn-primary:hover {
   background: rgba(41, 42, 53, 1);
   opacity: 1;
   position: absolute;
-  top:31%;
-  left:7%;
+  top: 31%;
+  left: 7%;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   border-bottom-left-radius: 15px;
@@ -1518,17 +1471,17 @@ button.btn-primary:hover {
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  overflow:hidden ;
+  overflow: hidden;
 }
 .box1 {
-    left: 25px;
+  left: 25px;
 }
-.box2 {  
-  left: 176px;  
+.box2 {
+  left: 176px;
 }
-.box3 {  
-    left: 325px;  
-  }
+.box3 {
+  left: 325px;
+}
 .box-box2 {
   width: 133px;
   height: 75px;
@@ -1543,50 +1496,50 @@ button.btn-primary:hover {
   overflow: hidden;
 }
 .title-box {
-    width: 455px;
-    height: 56px;
-    background: rgba(18,18,18,1);
-    opacity: 1;
-    position: absolute;
-    align-self: center;
-    padding-inline:5px ;
-    top: 21px;
-    left: 15px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: hidden;
-  }
+  width: 455px;
+  height: 56px;
+  background: rgba(18, 18, 18, 1);
+  opacity: 1;
+  position: absolute;
+  align-self: center;
+  padding-inline: 5px;
+  top: 21px;
+  left: 15px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  overflow: hidden;
+}
 
-  .custom-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Ensures the image fits inside the box, filling the box horizontally */
-    background-color: white; /* Optional: Fills background if needed */
+.custom-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensures the image fits inside the box, filling the box horizontally */
+  background-color: white; /* Optional: Fills background if needed */
 }
 .serv-top {
-    top: 175px;
-    display: inline-block; 
-    position: relative;    
-    color:var(--primary-color) ;
+  top: 175px;
+  display: inline-block;
+  position: relative;
+  color: var(--primary-color);
 }
-.top1{
-    left: 29px;
+.top1 {
+  left: 29px;
 }
-.top2{
-    left: 10px;
+.top2 {
+  left: 10px;
 }
 
 .serv-bot {
-    top: 260px;
-    display: inline-block; 
-    position: relative;    
-    color:var(--primary-color) ;
+  top: 260px;
+  display: inline-block;
+  position: relative;
+  color: var(--primary-color);
 }
-.bot2{
-    left: 28px;
+.bot2 {
+  left: 28px;
 }
-.bot3{
-    left: 4px;
+.bot3 {
+  left: 4px;
 }

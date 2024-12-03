@@ -1,49 +1,41 @@
 export default {
     template: `
     <div class="employee-home-container">
-
-    <div v-if="$store.state.role === 'emp'" >
-        <div class="container" style="width:700px; height:610px; background-color:var(--secondary); padding-top:25px;  border-radius: 15px;">
-
+    <div v-if="$store.state.role === 'emp'">
+        <div class="container" style="width: 700px; height: 610px; background-color: var(--secondary); padding-top: 25px; border-radius: 15px;">
             <h2 class="employee-home-title">Summary of Ratings Received</h2>
-        
-        <p v-if="isLoading" class="loading-text">Loading...</p>
-        <p v-else-if="error" class="error-text">{{ error }}</p>
-        
-        <div v-else>
-            <h2>Total Ratings: {{ totalRatings }} <i class="bi bi-star-half text-warning"></i></h2>
-            <h3>Average Rating: {{ averageRating.toFixed(2) }} <i class="bi bi-star-half text-warning"></i></h3>
+
+            <p v-if="isLoading" class="loading-text">Loading...</p>
+            <p v-else-if="error" class="error-text">{{ error }}</p>
+
+            <div v-else>
+                <h2>Total Ratings: {{ totalRatings }} <i class="bi bi-star-half text-warning"></i></h2>
+                <h3>Average Rating: {{ averageRating.toFixed(2) }} <i class="bi bi-star-half text-warning"></i></h3>
+            </div>
+
+            <h2 class="employee-home-subtitle">Booking Status</h2>
+            <div class="chart-container">
+                <canvas id="bookingStatusChart" width="360" height="360"></canvas>
+            </div>
         </div>
-        
-        <h2 class="employee-home-subtitle">Booking Status</h2>
-        <div class="chart-container">
-            <canvas id="bookingStatusChart" width='360' height='360'></canvas>
-        </div>
-        </div>
-        
     </div>
 
     <div v-else>
-        <div class="container-fluid text-center position-absolute" style="width: 485px; height: 330px; background-color: whitesmoke; border-radius: 15px; top: 58%; left: 16%; transform: translate(-40%, -45%);">            
-        <div class="row">
-            <h1 > Services provided by Us</h1>       
-        </div>
-        <div class="row">
-                <div class="col">
-                                      
-                </div>
-                <div class="col">
-                    
-                </div>
+        <div class="container-fluid text-center position-absolute" style="width: 485px; height: 330px; background-color: whitesmoke; border-radius: 15px; top: 58%; left: 16%; transform: translate(-40%, -45%);">
+            <div class="row">
+                <h1>Services provided by Us</h1>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
                 <div class="col">
                     Column
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-  
-    </div>
     `,
     data() {
         return {

@@ -3,19 +3,20 @@ export default {
     <div class="admin-dashboard">
     <h1 class="dashboard-title">Admin Dashboard</h1>
     <div class="dashboard-buttons">
-      <button @click="create_csv" class="btn btn-primary">Get Blog Data</button>
-      <button @click="$router.push('/customer-list')" class="btn btn-secondary">View Customer List</button>
-      <button @click="$router.push('/admin-bookings')" class="btn btn-info">View Booking Requests</button>
+        <button @click="create_csv" class="btn btn-primary">Get Blog Data</button>
+        <button @click="$router.push('/customer-list')" class="btn btn-secondary">View Customer List</button>
+        <button @click="$router.push('/admin-bookings')" class="btn btn-info">View Booking Requests</button>
     </div>
     <div class="charts-container">
-      <div class="chart">
-        <canvas id="bookingChart" width="360" height="360"></canvas>
-      </div>
-      <div class="chart mt-4">
-        <canvas id="userChart" width="360" height="360"></canvas>
-      </div>
+        <div class="chart">
+            <canvas id="bookingChart" width="360" height="360"></canvas>
+        </div>
+        <div class="chart mt-4">
+            <canvas id="userChart" width="360" height="360"></canvas>
+        </div>
     </div>
-  </div>
+</div>
+
     `,
     data() {
         return {

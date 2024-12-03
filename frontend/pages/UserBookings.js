@@ -17,7 +17,7 @@ export default {
     <div v-if="isLoading" class="loading-text">Loading...</div>
     <div v-else-if="error" class="error-text">{{ error }}</div>
     <div v-else>
-        <table class="table" style="width:1300px" >
+        <table class="table" style="width: 1300px;">
             <thead>
                 <tr>
                     <th>Service</th>
@@ -34,11 +34,7 @@ export default {
                     <td>{{ booking.date }}</td>
                     <td>{{ booking.status }}</td>
                     <td>
-                        <button 
-                            :class="{'btn btn-primary': true}" 
-                            :disabled="booking.status === 'Pending' || booking.status === 'Rejected' || booking.status === 'Completed'" 
-                            @click="openRatingModal(booking.id)"
-                        >
+                        <button :class="{'btn btn-primary': true}" :disabled="booking.status === 'Pending' || booking.status === 'Rejected' || booking.status === 'Completed'" @click="openRatingModal(booking.id)">
                             Complete
                         </button>
                     </td>
@@ -58,7 +54,7 @@ export default {
                 <div class="modal-body">
                     <div class="rating">
                         <span v-for="star in 5" :key="star" @click="setRating(star)" :class="{'text-warning': star <= rating, 'text-muted': star > rating}">
-                        <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
                         </span>
                     </div>
                     <textarea v-model="review" class="form-control mt-3" placeholder="Write your review here..."></textarea>
@@ -71,6 +67,7 @@ export default {
         </div>
     </div>
 </div>
+
     `,
     data() {
         return {

@@ -7,16 +7,14 @@ export default {
         <div v-if="isLoading" class="loading-text">Loading...</div>
         <div v-else-if="error" class="error-text">{{ error }}</div>
         <div v-else>
-            <input v-model="service" placeholder="Service" class="form-control mb-3"> 
-            <input v-model="name" placeholder="Name" class="form-control mb-3"> 
-            <input v-model="description" placeholder="Description" class="form-control mb-3">
-            <input type="number" v-model="price" placeholder="Price" class="form-control mb-3">
+            <input v-model="service" placeholder="Service" class="form-control mb-3" />
+            <input v-model="name" placeholder="Name" class="form-control mb-3" />
+            <input v-model="description" placeholder="Description" class="form-control mb-3" />
+            <input type="number" v-model="price" placeholder="Price" class="form-control mb-3" />
             <button @click="updateService" class="btn btn-primary">Update Service</button>
         </div>
     </div>
 </div>
-
-
     `,
     data() {
         return {
