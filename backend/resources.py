@@ -5,10 +5,13 @@ from backend.models import db, Customer, Services, Booking, Role
 from datetime import datetime
 from flask_caching import Cache
 from backend.celery.mail import mail_them
-import logging
+import pytz, logging
+
 
 api = Api(prefix="/api")
 cache = app.cache
+india_tz = pytz.timezone('Asia/Kolkata')
+
 
 service_fields = {
     "id": fields.Integer,
@@ -148,10 +151,35 @@ class booking_api(Resource):
         booking_instance = Booking.query.get(id)
         if not booking_instance:
             return {"message": "No such booking found"}, 404
+        # print('hellloooooooooooo')
+        # print(f"Booking Date: {booking_instance.date}")        
+        # print(f"Current Date: {datetime.now()}")
+
+        if booking_instance.date.tzinfo is None:
+            booking_instance.date = india_tz.localize(booking_instance.date)
+        else:
+            booking_instance.date = booking_instance.date.astimezone(india_tz)
+        
+        current_time = datetime.now(india_tz)
+        # print(f"Booking Date: {booking_instance.date}") 
+        # print(f"Current Date: {current_time}")
+        # print(booking_instance.date < current_time)
+
+        # Automatically set status to "Expired" if the booking date and time have passed
+        if booking_instance.status == "Pending" and (booking_instance.date < current_time):
+            booking_instance.status = "Expired"
+            db.session.commit()
+            customer_email = booking_instance.customer.email
+            subject = "Booking Expired"
+            content = f"Your booking for the service '{booking_instance.service.name}' has expired."
+            mail_them.delay(customer_email, subject, content)
+            return {"message": "Booking has expired and cannot be confirmed"}, 403
 
         if current_user.has_role("emp"):
             if data.get("status") == "Completed":
                 return {"message": "Employees cannot mark bookings as completed"}, 403
+            if data.get("status") == "Confirmed" and booking_instance.status == "Expired":
+                return {"message": "Cannot confirm booking. The booking has expired."}, 403
             booking_instance.status = data.get("status")
         elif current_user.has_role("customer"):
             if booking_instance.customer_id != current_user.id:
@@ -168,15 +196,13 @@ class booking_api(Resource):
             if booking_instance.status in ["Confirmed", "Rejected"]:
                 customer_email = booking_instance.customer.email
                 subject = f"Booking {booking_instance.status}"
-                content = f"Your booking for the service '{
-                    booking_instance.service.name}' has been {booking_instance.status.lower()}."
+                content = f"Your booking for the service '{booking_instance.service.name}' has been {booking_instance.status.lower()}."
                 mail_them.delay(customer_email, subject, content)
             # Send email notification to the employee about the rating and review
             if booking_instance.status == "Completed":
                 employee_email = booking_instance.employee.email
                 subject = "Service Rating and Review Received"
-                content = f"Your service '{booking_instance.service.name}' has been rated {
-                    booking_instance.rating} stars.\n\nReview:\n{booking_instance.review}"
+                content = f"Your service '{booking_instance.service.name}' has been rated {booking_instance.rating} stars.\n\nReview:\n{booking_instance.review}"
                 mail_them.delay(employee_email, subject, content)
             return {"message": "Booking status updated"}, 200
         except Exception as e:

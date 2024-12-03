@@ -11,6 +11,7 @@ export default {
                 <option value="Confirmed">Confirmed</option>
                 <option value="Rejected">Rejected</option>
                 <option value="Completed">Completed</option>
+                <option value="Expired">Expired</option>
             </select>
         </div>
         <div v-if="isLoading" class="loading-text">Loading...</div>
@@ -99,14 +100,15 @@ export default {
                 });
 
                 if (!res.ok) {
-                    throw new Error(`Failed to update booking status: HTTP ${res.status}`);
+                    const data = await res.json();
+                    throw new Error(data.message || `Failed to update booking status: HTTP ${res.status}`);
                 }
 
                 alert('Booking status updated');
                 this.fetchBookings(); // Refresh the booking list
             } catch (error) {
                 console.error('Error updating booking status:', error);
-                alert('Could not update the booking status. Please try again later.');
+                alert(error.message || 'Could not update the booking status. Please try again later.');
             }
         }
     },
