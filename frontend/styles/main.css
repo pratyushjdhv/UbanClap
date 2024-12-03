@@ -1391,3 +1391,65 @@ button.btn-primary:hover {
 .user-bookings-container .modal-footer button {
     font-weight: bold;
 }
+
+/* Employee Home Container */
+.employee-home-container {
+    background: linear-gradient(45deg, rgba(184, 39, 26, 0.8), rgba(29, 39, 56, 0.8)); /* Gradient background */
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title Styling */
+.employee-home-title {
+    color: var(--primary-color); /* Light Yellow */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Subtitle Styling */
+.employee-home-subtitle {
+    color: var(--primary-color); /* Light Yellow */
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+/* Summary of Ratings Section */
+.employee-home-container p {
+    color: var(--text-color); /* Muted light gray */
+}
+
+/* Chart Container */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Loading and Error Text */
+.loading-text, .error-text {
+    color: var(--primary-color); /* Light Yellow */
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .employee-home-container {
+        padding: 15px;
+    }
+    .employee-home-title {
+        font-size: 1.8rem;
+    }
+    .employee-home-subtitle {
+        font-size: 1.3rem;
+    }
+    .chart-container {
+        width: 100%;
+        padding: 10px;
+    }
+}

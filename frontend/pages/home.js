@@ -1,22 +1,37 @@
 export default {
     template: `
-        <div>
-            <h1>Home</h1>
-            <p>Welcome to the home page</p>
-            <div v-if="$store.state.role === 'emp'">
-                <h2>Summary of Ratings Received</h2>
-                <p v-if="isLoading">Loading...</p>
-                <p v-else-if="error">{{ error }}</p>
-                <div v-else>
-                    <p>Total Ratings: {{ totalRatings }}</p>
-                    <p>Average Rating: {{ averageRating.toFixed(2) }}</p>
-                </div>
-                <h2>Booking Status</h2>
-                <div class="container">
-                    <canvas id="bookingStatusChart" width= '360' height='360'></canvas>
-                </div>
-            </div>
+    <div class="employee-home-container">
+
+    <div v-if="$store.state.role === 'emp'" >
+        <div class="container" style="width:700px; height:610px; background-color:var(--secondary); padding-top:25px;  border-radius: 15px;">
+
+            <h2 class="employee-home-title">Summary of Ratings Received</h2>
+        
+        <p v-if="isLoading" class="loading-text">Loading...</p>
+        <p v-else-if="error" class="error-text">{{ error }}</p>
+        
+        <div v-else>
+            <h2>Total Ratings: {{ totalRatings }} <i class="bi bi-star-half text-warning"></i></h2>
+            <h3>Average Rating: {{ averageRating.toFixed(2) }} <i class="bi bi-star-half text-warning"></i></h3>
         </div>
+        
+        <h2 class="employee-home-subtitle">Booking Status</h2>
+        <div class="chart-container">
+            <canvas id="bookingStatusChart" width='360' height='360'></canvas>
+        </div>
+        </div>
+        
+    </div>
+
+    <div v-else>
+    <h1>hii</h1>
+    <div class="container-fluid" style='width:1000px; height:1000px; background-color:whitesmoke; '>
+        <h1>hi</h1>
+
+    </div>
+                    
+    </div>
+</div>
     `,
     data() {
         return {
